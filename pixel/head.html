@@ -1,0 +1,34 @@
+<script>
+  ;(function () {
+    var appId = '{{settings.gtmId}}'
+    if (!appId) {
+      console.error(
+        'Warning: No APP NAME ID is defined. Please configure it in the apps admin.'
+      )
+      return
+    }
+
+    // Add script here
+    // Start of Clerk.io E-commerce Personalisation tool - www.clerk.io
+    ;(function (w, d) {
+      var e = d.createElement('script')
+      e.type = 'text/javascript'
+      e.async = true
+      e.src =
+        (d.location.protocol == 'https:' ? 'https' : 'http') +
+        '://cdn.clerk.io/clerk.js'
+      var s = d.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(e, s)
+      w.__clerk_q = w.__clerk_q || []
+      w.Clerk =
+        w.Clerk ||
+        function () {
+          w.__clerk_q.push(arguments)
+        }
+    })(window, document)
+
+    Clerk('config', {
+      key: 'W1YtigmSR6XOZE5nrynkSWpZ0vCBYNny',
+    })
+  })()
+</script>
