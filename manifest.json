@@ -1,9 +1,9 @@
 {
-  "name": "YOURAPPNAME",
+  "name": "clerkio-integration",
   "vendor": "vtex",
   "version": "0.0.1",
-  "title": "CHANGEME",
-  "description": "CHANGEME",
+  "title": "Clerk.io Integration",
+  "description": "Integrate Cler.io powerful personalization to your store. ",
   "billingOptions": {
     "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
     "support": {
@@ -25,15 +25,9 @@
     "vtex.pixel-interfaces": "1.x"
   },
   "settingsSchema": {
-    "title": "YOUR APP NAME",
+    "title": "Clerk.io Integration",
     "type": "object",
-    "properties": {
-      "gtmId": {
-        "title": "SAMPLE FIELD",
-        "description": "Enter the ID (GTM-XXXX) from your Google Tag Manager",
-        "type": "string"
-      }
-    }
+    "properties": {}
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
