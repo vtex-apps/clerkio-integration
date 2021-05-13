@@ -1,0 +1,6 @@
+{
+  "section": "storeSetup",
+  "titleId": "admin/clerkio.menu",
+  "path": "/admin/clerkio",
+  "searchKeyWordsHelpers": "admin/clerkio.navigation.search.kws"
+}

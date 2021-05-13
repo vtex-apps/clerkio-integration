@@ -1,0 +1,6 @@
+{
+  "admin.app.lengow": {
+    "component": "ClerkIoAdmin",
+    "path": "/admin/app/clerkio"
+  }
+}
