@@ -11,9 +11,7 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "builders": {
     "react": "3.x",
@@ -27,7 +25,13 @@
   "settingsSchema": {
     "title": "Clerk.io Integration",
     "type": "object",
-    "properties": {}
+    "properties": {
+      "clerkioToken": {
+        "title": "Clerk.io Public API Key",
+        "description": "This is the public key to be used for authentication with the Clerk.io API",
+        "type": "string"
+      }
+    }
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
