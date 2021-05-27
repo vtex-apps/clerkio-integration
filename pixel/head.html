@@ -1,10 +1,8 @@
 <script>
   ;(function () {
-    var appId = '{{settings.gtmId}}'
-    if (!appId) {
-      console.error(
-        'Warning: No APP NAME ID is defined. Please configure it in the apps admin.'
-      )
+    var token = '{{settings.clerkioToken}}'
+    if (!token) {
+      console.error('Missing or invalid Clerk.io API key')
       return
     }
 
@@ -14,6 +12,7 @@
       var e = d.createElement('script')
       e.type = 'text/javascript'
       e.async = true
+      e.defer = true
       e.src =
         (d.location.protocol == 'https:' ? 'https' : 'http') +
         '://cdn.clerk.io/clerk.js'
@@ -28,7 +27,7 @@
     })(window, document)
 
     Clerk('config', {
-      key: 'W1YtigmSR6XOZE5nrynkSWpZ0vCBYNny',
+      key: token,
     })
   })()
 </script>

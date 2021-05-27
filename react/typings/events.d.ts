@@ -206,6 +206,7 @@ export interface Order {
   currency: string
   openTextField: string
   orderGroup: string
+  ordersInOrderGroup: string[]
   salesChannel: string
   visitorAddressCity: string
   visitorAddressComplement: string
