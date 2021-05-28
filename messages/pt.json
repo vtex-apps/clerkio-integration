@@ -6,5 +6,6 @@
   "admin/cms/clerkio.block.class.name": "Nome da class para o block",
   "admin/cms/clerkio.block.class.description": "Nome da classe exclusiva - Evite usar a mesma classe para diferentes Blocks para a integração",
   "admin/cms/clerkio.block.template.name": "Nome do template",
-  "admin/cms/clerkio.block.template.description": "Template name from Clerk Content, starting with @"
+  "admin/cms/clerkio.block.template.description": "Template name from Clerk Content, starting with @",
+  "admin/cms/clerkio.block.logic.name": "Product Logic"
 }
