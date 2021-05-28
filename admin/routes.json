@@ -1,0 +1,6 @@
+{
+  "admin.app.clerkio": {
+    "component": "ClerkIoAdmin",
+    "path": "/admin/app/clerkio"
+  }
+}

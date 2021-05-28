@@ -1,5 +1,8 @@
 {
   "pixel.APPNAME": {
     "component": "index"
+  },
+  "clerkio": {
+    "component": "ClerkIoBlock"
   }
 }
