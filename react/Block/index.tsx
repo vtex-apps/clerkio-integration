@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 
-import { logicTypes } from './constants'
+import { DATA_CATEGORY, DATA_KEYWORDS, logicTypes } from './constants'
 import { ensureSingleWordClass } from './utils'
 
 interface BlockProps {
   blockClassName: string
   templateName: string
-  contentLogic: string
+  contentLogic: typeof logicTypes[number]['type']
 }
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
@@ -55,7 +55,66 @@ ClerkIoBlock.schema = {
     contentLogic: {
       title: 'admin/cms/clerkio.block.logic.name',
       type: 'string',
-      enum: logicTypes,
+      enum: logicTypes.map(({ type }) => type),
+    },
+  },
+  dependencies: {
+    contentLogic: {
+      oneOf: [
+        {
+          properties: {
+            contentLogic: {
+              enum: logicTypes
+                .filter(({ prop }) => prop === DATA_CATEGORY)
+                .map(({ type }) => type),
+            },
+            useContext: {
+              type: 'boolean',
+              title: 'admin/cms/clerkio.block.logic.category.useContext',
+              default: true,
+            },
+          },
+          dependencies: {
+            useContext: {
+              oneOf: [
+                {
+                  properties: {
+                    useContext: {
+                      enum: [false],
+                    },
+                    categoryId: {
+                      type: 'string',
+                      title: 'admin/cms/clerkio.block.logic.category.id',
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          properties: {
+            contentLogic: {
+              enum: logicTypes
+                .filter(({ prop }) => prop === DATA_KEYWORDS)
+                .map(({ type }) => type),
+            },
+            keywords: {
+              minItems: 0,
+              type: 'array',
+              title: 'admin/cms/clerkio.block.logic.keywords',
+              items: {
+                properties: {
+                  keyword: {
+                    type: 'string',
+                    title: 'admin/cms/clerkio.block.logic.keyword',
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
     },
   },
 }
