@@ -1,5 +1,4 @@
 // Clerk Props
-
 export const DATA_CATEGORY = 'data-category'
 export const DATA_PRODUCTS = 'data-products'
 export const DATA_KEYWORDS = 'data-keywords'
@@ -11,82 +10,128 @@ type DataProps =
   | typeof DATA_KEYWORDS
   | typeof DATA_EMAIL
 
+// Clerk Product logic
+const LOGIC_BEST_SELLERS = 'Best Sellers'
+const LOGIC_HOT_PRODUCTS = 'Hot Products'
+const LOGIC_NEWEST_PRODUCTS = 'Newest Products'
+const LOGIC_BEST_SELLERS_IN_CATEGORY = 'Best Sellers In Category'
+const LOGIC_HOT_PRODUCTS_IN_CATEGORY = 'Hot Products In Category'
+const LOGIC_NEWEST_PRODUCTS_IN_CATEGORY = 'Newest Products in Category'
+const LOGIC_BEST_ALTERNATIVE_PRODUCTS = 'Best Alternative Products'
+const LOGIC_BEST_CROSS_SELL_PRODUTS = 'Best Cross-Sell Produts'
+const LOGIC_RECOMMENDATIONS_BASED_ON_KEYWORDS =
+  'Recommendations Based On Keywords'
+
+const LOGIC_VISITOR_RECOMMENDATIONS = 'Visitor Recommendations'
+const LOGIC_VISITOR_ALTERNATIVES = 'Visitor Alternatives'
+const LOGIC_VISITOR_CLICK_HISTORY = 'Visitor Click History'
+const LOGIC_RECOMMENDATIONS_BASED_ON_ORDERS = 'Recommendations Based On Orders'
+const LOGIC_SIMILAR_TO_ORDER_HISTORY = 'Similar To Order History'
+const LOGIC_CUSTOMER_ORDER_HISTORY = 'Customer Order History'
+const LOGIC_WHAT_CUSTOMERS_LOOK_AT_RIGHT_NOW =
+  'What Customers Look At Right Now'
+
+const LOGIC_RECENTLY_PURCHASED_PRODUCTSW = 'Recently Purchased Products'
+
+type ProductLogics =
+  | typeof LOGIC_BEST_SELLERS
+  | typeof LOGIC_HOT_PRODUCTS
+  | typeof LOGIC_NEWEST_PRODUCTS
+  | typeof LOGIC_BEST_SELLERS_IN_CATEGORY
+  | typeof LOGIC_HOT_PRODUCTS_IN_CATEGORY
+  | typeof LOGIC_NEWEST_PRODUCTS_IN_CATEGORY
+  | typeof LOGIC_BEST_ALTERNATIVE_PRODUCTS
+  | typeof LOGIC_BEST_CROSS_SELL_PRODUTS
+  | typeof LOGIC_RECOMMENDATIONS_BASED_ON_KEYWORDS
+  | typeof LOGIC_VISITOR_RECOMMENDATIONS
+  | typeof LOGIC_VISITOR_ALTERNATIVES
+  | typeof LOGIC_VISITOR_CLICK_HISTORY
+  | typeof LOGIC_RECOMMENDATIONS_BASED_ON_ORDERS
+  | typeof LOGIC_SIMILAR_TO_ORDER_HISTORY
+  | typeof LOGIC_CUSTOMER_ORDER_HISTORY
+  | typeof LOGIC_WHAT_CUSTOMERS_LOOK_AT_RIGHT_NOW
+  | typeof LOGIC_RECENTLY_PURCHASED_PRODUCTSW
+
 class ClerkProductLogic {
-  public type: string
+  public type: ProductLogics
   public prop: DataProps | null
 
-  constructor(type: string, prop: DataProps | null) {
+  constructor(type: ProductLogics, prop: DataProps | null) {
     this.type = type
     this.prop = prop
   }
 }
 
-const BEST_SELLERS = new ClerkProductLogic('Best Sellers', null)
-const HOT_PRODUCTS = new ClerkProductLogic('Hot Products', null)
-const NEWEST_PRODUCTS = new ClerkProductLogic('Newest Products', null)
+const BEST_SELLERS = new ClerkProductLogic(LOGIC_BEST_SELLERS, null)
+const HOT_PRODUCTS = new ClerkProductLogic(LOGIC_HOT_PRODUCTS, null)
+const NEWEST_PRODUCTS = new ClerkProductLogic(LOGIC_NEWEST_PRODUCTS, null)
 const BEST_SELLERS_IN_CATEGORY = new ClerkProductLogic(
-  'Best Sellers In Category',
+  LOGIC_BEST_SELLERS_IN_CATEGORY,
   DATA_CATEGORY
 )
 
 const HOT_PRODUCTS_IN_CATEGORY = new ClerkProductLogic(
-  'Hot Products In Category',
+  LOGIC_HOT_PRODUCTS_IN_CATEGORY,
   DATA_CATEGORY
 )
 
 const NEWEST_PRODUCTS_IN_CATEGORY = new ClerkProductLogic(
-  'Newest Products in Category',
+  LOGIC_NEWEST_PRODUCTS_IN_CATEGORY,
   DATA_CATEGORY
 )
 
 const BEST_ALTERNATIVE_PRODUCTS = new ClerkProductLogic(
-  'Best Alternative Products',
+  LOGIC_BEST_ALTERNATIVE_PRODUCTS,
   DATA_PRODUCTS
 )
 
 const BEST_CROSS_SELL_PRODUTS = new ClerkProductLogic(
-  'Best Cross-Sell Produts',
+  LOGIC_BEST_CROSS_SELL_PRODUTS,
   DATA_PRODUCTS
 )
 
 const RECOMMENDATIONS_BASED_ON_KEYWORDS = new ClerkProductLogic(
-  'Recommendations Based On Keywords',
+  LOGIC_RECOMMENDATIONS_BASED_ON_KEYWORDS,
   DATA_KEYWORDS
 )
 
 const VISITOR_RECOMMENDATIONS = new ClerkProductLogic(
-  'Visitor Recommendations',
+  LOGIC_VISITOR_RECOMMENDATIONS,
   null
 )
 
-const VISITOR_ALTERNATIVES = new ClerkProductLogic('Visitor Alternatives', null)
+const VISITOR_ALTERNATIVES = new ClerkProductLogic(
+  LOGIC_VISITOR_ALTERNATIVES,
+  null
+)
+
 const VISITOR_CLICK_HISTORY = new ClerkProductLogic(
-  'Visitor Click History',
+  LOGIC_VISITOR_CLICK_HISTORY,
   null
 )
 
 const RECOMMENDATIONS_BASED_ON_ORDERS = new ClerkProductLogic(
-  'Recommendations Based On Orders',
+  LOGIC_RECOMMENDATIONS_BASED_ON_ORDERS,
   DATA_EMAIL
 )
 
 const SIMILAR_TO_ORDER_HISTORY = new ClerkProductLogic(
-  'Similar To Order History',
+  LOGIC_SIMILAR_TO_ORDER_HISTORY,
   DATA_EMAIL
 )
 
 const CUSTOMER_ORDER_HISTORY = new ClerkProductLogic(
-  'Customer Order History',
+  LOGIC_CUSTOMER_ORDER_HISTORY,
   DATA_EMAIL
 )
 
 const WHAT_CUSTOMERS_LOOK_AT_RIGHT_NOW = new ClerkProductLogic(
-  'What Customers Look At Right Now',
+  LOGIC_WHAT_CUSTOMERS_LOOK_AT_RIGHT_NOW,
   null
 )
 
 const RECENTLY_PURCHASED_PRODUCTS = new ClerkProductLogic(
-  'Recently Purchased Products',
+  LOGIC_RECENTLY_PURCHASED_PRODUCTSW,
   DATA_EMAIL
 )
 
