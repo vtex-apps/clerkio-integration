@@ -7,12 +7,18 @@ interface BlockProps {
   blockClassName: string
   templateName: string
   contentLogic: typeof logicTypes[number]['type']
+  categoryId?: string
+  useContext?: boolean
+  keywords?: Array<Record<'keyword', string>>
 }
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   blockClassName,
   templateName,
   contentLogic,
+  categoryId,
+  useContext,
+  keywords,
 }) => {
   const adjustedClassName = ensureSingleWordClass(blockClassName)
 
@@ -25,7 +31,7 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   }, [adjustedClassName, templateName])
 
   // eslint-disable-next-line no-console
-  console.log({ contentLogic })
+  console.log({ contentLogic, categoryId, useContext, keywords })
 
   return adjustedClassName && templateName ? (
     <div>
