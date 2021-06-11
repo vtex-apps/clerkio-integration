@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { DATA_CATEGORY, DATA_KEYWORDS, logicTypes } from './constants'
-import { ensureSingleWordClass } from './utils'
+import { createClerkDataProps, ensureSingleWordClass } from './utils'
 
 interface BlockProps {
   blockClassName: string
@@ -11,6 +11,10 @@ interface BlockProps {
   useContext?: boolean
   keywords?: Array<Record<'keyword', string>>
 }
+
+const getUserEmail = () => 'test@test.com'
+const getCategoryIdFromContext = () => '1'
+const getProductsFromContext = () => ['1']
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   blockClassName,
@@ -30,13 +34,24 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
     }
   }, [adjustedClassName, templateName])
 
-  // eslint-disable-next-line no-console
-  console.log({ contentLogic, categoryId, useContext, keywords })
+  const dataProps = createClerkDataProps({
+    contentLogic,
+    values: {
+      keywords: keywords?.map(({ keyword }) => keyword),
+      categoryId: useContext ? getCategoryIdFromContext() : categoryId,
+      userEmail: getUserEmail(),
+      productIds: getProductsFromContext(),
+    },
+  })
 
   return adjustedClassName && templateName ? (
     <div>
       <h2>Clerk Io</h2>
-      <span className={adjustedClassName} data-template={templateName} />
+      <span
+        className={adjustedClassName}
+        data-template={templateName}
+        {...dataProps}
+      />
     </div>
   ) : null
 }
@@ -71,7 +86,7 @@ ClerkIoBlock.schema = {
           properties: {
             contentLogic: {
               enum: logicTypes
-                .filter(({ prop }) => prop === DATA_CATEGORY)
+                .filter(({ prop }) => prop?.propName === DATA_CATEGORY.propName)
                 .map(({ type }) => type),
             },
             useContext: {
@@ -102,7 +117,7 @@ ClerkIoBlock.schema = {
           properties: {
             contentLogic: {
               enum: logicTypes
-                .filter(({ prop }) => prop === DATA_KEYWORDS)
+                .filter(({ prop }) => prop?.propName === DATA_KEYWORDS.propName)
                 .map(({ type }) => type),
             },
             keywords: {

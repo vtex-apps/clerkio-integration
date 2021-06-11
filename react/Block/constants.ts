@@ -1,10 +1,22 @@
 // Clerk Props
-export const DATA_CATEGORY = 'data-category'
-export const DATA_PRODUCTS = 'data-products'
-export const DATA_KEYWORDS = 'data-keywords'
-export const DATA_EMAIL = 'data-email'
+export const DATA_CATEGORY = {
+  propName: 'data-category',
+  propField: 'categoryId',
+} as const
+export const DATA_PRODUCTS = {
+  propName: 'data-products',
+  propField: 'productIds',
+} as const
+export const DATA_KEYWORDS = {
+  propName: 'data-keywords',
+  propField: 'keywords',
+} as const
+export const DATA_EMAIL = {
+  propName: 'data-email',
+  propField: 'userEmail',
+} as const
 
-type DataProps =
+type PropData =
   | typeof DATA_CATEGORY
   | typeof DATA_PRODUCTS
   | typeof DATA_KEYWORDS
@@ -54,9 +66,9 @@ type ProductLogics =
 
 class ClerkProductLogic {
   public type: ProductLogics
-  public prop: DataProps | null
+  public prop: PropData | null
 
-  constructor(type: ProductLogics, prop: DataProps | null) {
+  constructor(type: ProductLogics, prop: PropData | null) {
     this.type = type
     this.prop = prop
   }
