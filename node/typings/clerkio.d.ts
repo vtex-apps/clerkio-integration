@@ -76,3 +76,13 @@ interface ClerkPage {
   title: string
   text: string
 }
+
+interface FeedStructure<FeedType> {
+  data: FeedType[]
+  createdAt: number
+}
+
+interface OrderFeed extends FeedStructure {
+  ordersSince: string
+  startedAt: number
+}

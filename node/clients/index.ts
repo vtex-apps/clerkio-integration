@@ -1,3 +1,9 @@
 import { IOClients } from '@vtex/api'
 
-export class Clients extends IOClients {}
+import { FeedManager } from './FeedManager'
+
+export class Clients extends IOClients {
+  public get feedManager() {
+    return this.getOrSet('feedManager', FeedManager)
+  }
+}
