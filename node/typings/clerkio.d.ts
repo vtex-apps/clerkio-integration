@@ -48,11 +48,11 @@ interface ClerkCategory {
 
 interface ClerkOrder {
   id: string
-  products: {
+  products: Array<{
     id: string
     quantity: number
     price: number
-  }
+  }>
   /**
    * The time of the order as a Unix Timestamp.
    *
@@ -80,9 +80,4 @@ interface ClerkPage {
 interface FeedStructure<FeedType> {
   data: FeedType[]
   createdAt: number
-}
-
-interface OrderFeed extends FeedStructure {
-  ordersSince: string
-  startedAt: number
 }
