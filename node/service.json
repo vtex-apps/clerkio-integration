@@ -9,6 +9,10 @@
     "feed": {
       "path": "/_v/clerkio-integration/feed/:language",
       "public": true
+    },
+    "getCategories": {
+      "path": "/_v/clerkio-integration/feed/categories",
+      "public": true
     }
   }
 }

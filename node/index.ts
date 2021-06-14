@@ -7,6 +7,7 @@ import type {
 import { Service } from '@vtex/api'
 
 import { Clients } from './clients'
+import { flattenArray } from './utils'
 
 const TIMEOUT_MS = 800
 
@@ -35,6 +36,17 @@ export default new Service<Clients, RecorderState, ParamsContext>({
       } = ctx
 
       ctx.body = params
+    },
+    getCategories: async (ctx: Context) => {
+      const {
+        clients: { catalog },
+      } = ctx
+
+      const res = await catalog.getCategoryTree(5)
+      const feedCategories = flattenArray(res)
+
+      ctx.status = 200
+      ctx.body = feedCategories
     },
   },
 })
