@@ -2,6 +2,7 @@ import { VBase, LINKED } from '@vtex/api'
 
 const BUCKET = `clerk-io${LINKED ? '-linked' : ''}`
 const PRODUCT_PATH = 'product-feed'
+const CATEGORY_PATH = 'category-feed'
 
 export class FeedManager extends VBase {
   public saveProductFeed = ({
@@ -24,9 +25,19 @@ export class FeedManager extends VBase {
       true
     )
 
-  public saveCategoryFeed = () => {}
+  public saveCategoryFeed = ({
+    categoryFeed,
+  }: {
+    categoryFeed: ClerkCategory[]
+  }) =>
+    this.saveJSON<FeedStructure<ClerkCategory>>(
+      BUCKET,
+      CATEGORY_PATH,
+      this.feedStructure<ClerkCategory>(categoryFeed)
+    )
 
-  public getCategoryFeed = () => {}
+  public getCategoryFeed = () =>
+    this.getJSON<FeedStructure<ClerkCategory>>(BUCKET, CATEGORY_PATH, true)
 
   public saveOrderFeed = () => {}
 
