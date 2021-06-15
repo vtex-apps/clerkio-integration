@@ -42,11 +42,16 @@ export default new Service<Clients, RecorderState, ParamsContext>({
         clients: { catalog },
       } = ctx
 
-      const res = await catalog.getCategoryTree(5)
-      const feedCategories = flattenArray(res)
+      try {
+        const res = await catalog.getCategoryTree(6)
+        const feedCategories = flattenArray(res)
 
-      ctx.status = 200
-      ctx.body = feedCategories
+        ctx.status = 200
+        ctx.body = feedCategories
+      } catch (error) {
+        ctx.status = error.status || 500
+        ctx.body = error.message
+      }
     },
   },
 })
