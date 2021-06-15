@@ -83,3 +83,53 @@ interface FeedStructure<FeedType> {
 }
 
 type OrderIntegrationControl = Record<string, number>
+
+interface IntegrationInfo {
+  /**
+   * The time when orders were integrated as a Unix Timestamp
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orderIntegratedAt: number
+  /**
+   * Number of products integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  products: number
+  /**
+   * Number of categories integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  categories: number
+  integratedAt: number
+}
+
+interface IntegrationInfoInput {
+  /**
+   * The time when orders were integrated as a Unix Timestamp
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orderIntegratedAt: number
+  /**
+   * Number of products integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  products: number
+  /**
+   * Number of categories integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  categories: number
+  locale: string
+}

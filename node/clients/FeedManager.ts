@@ -4,7 +4,7 @@ const BUCKET = `clerk-io${LINKED ? '-linked' : ''}`
 const PRODUCT_PATH = 'product-feed'
 const CATEGORY_PATH = 'category-feed'
 const ORDER_PATH = 'order-feed'
-const ORDER_INTEGRATION = 'order-integration'
+const LAST_INTEGRATION = 'last-int'
 
 export class FeedManager extends VBase {
   public saveProductFeed = ({
@@ -21,7 +21,7 @@ export class FeedManager extends VBase {
     )
 
   public getProductFeed = (locale: string) =>
-    this.getJSON<FeedStructure<ClerkProduct>>(
+    this.getJSON<FeedStructure<ClerkProduct> | null>(
       BUCKET,
       this.productPath(locale),
       true
@@ -39,7 +39,11 @@ export class FeedManager extends VBase {
     )
 
   public getCategoryFeed = () =>
-    this.getJSON<FeedStructure<ClerkCategory>>(BUCKET, CATEGORY_PATH, true)
+    this.getJSON<FeedStructure<ClerkCategory> | null>(
+      BUCKET,
+      CATEGORY_PATH,
+      true
+    )
 
   public saveOrderFeed = ({ orderFeed }: { orderFeed: ClerkOrder[] }) =>
     this.saveJSON<FeedStructure<ClerkOrder>>(
@@ -49,35 +53,40 @@ export class FeedManager extends VBase {
     )
 
   public getOrderFeed = () =>
-    this.getJSON<FeedStructure<ClerkOrder>>(BUCKET, ORDER_PATH, true)
+    this.getJSON<FeedStructure<ClerkOrder> | null>(BUCKET, ORDER_PATH, true)
 
-  public updateOrderIntegrationControl = async (locale: string) => {
-    const orderIntControl = await this.getOrderIntegrationControl()
+  public updateLastIntegration = async ({
+    locale,
+    products,
+    orderIntegratedAt,
+    categories,
+  }: IntegrationInfoInput) =>
+    this.saveJSON<IntegrationInfo>(BUCKET, this.lastIntegrationPath(locale), {
+      products,
+      orderIntegratedAt,
+      categories,
+      integratedAt: new Date().getTime(),
+    })
 
-    return this.saveJSON(
+  public getLastIntegration = (locale: string) =>
+    this.getJSON<IntegrationInfo | null>(
       BUCKET,
-      ORDER_INTEGRATION,
-      this.createOrderControl({ locale, orderIntControl })
-    )
-  }
-
-  public getOrderIntegrationControl = () =>
-    this.getJSON<OrderIntegrationControl | null>(
-      BUCKET,
-      ORDER_INTEGRATION,
+      this.lastIntegrationPath(locale),
       true
     )
 
-  private createOrderControl = ({
-    locale,
-    orderIntControl,
-  }: {
+  public ordersIntegratedAt = async (
     locale: string
-    orderIntControl: OrderIntegrationControl | null
-    // It should keep always the oldest reference to locale, since order feed is integrated only once
-  }) => ({ [locale]: new Date().getTime(), ...(orderIntControl ?? {}) })
+  ): Promise<number | undefined> => {
+    const lastIntegration = await this.getLastIntegration(locale)
+
+    return lastIntegration?.orderIntegratedAt
+  }
 
   private productPath = (locale: string): string => `${PRODUCT_PATH}-${locale}`
+  private lastIntegrationPath = (locale: string): string =>
+    `${LAST_INTEGRATION}-${locale}`
+
   private feedStructure = <FeedType>(
     data: FeedType[]
   ): FeedStructure<FeedType> => {
