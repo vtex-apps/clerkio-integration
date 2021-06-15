@@ -4,6 +4,7 @@ const BUCKET = `clerk-io${LINKED ? '-linked' : ''}`
 const PRODUCT_PATH = 'product-feed'
 const CATEGORY_PATH = 'category-feed'
 const ORDER_PATH = 'order-feed'
+const ORDER_INTEGRATION = 'order-integration'
 
 export class FeedManager extends VBase {
   public saveProductFeed = ({
@@ -49,6 +50,32 @@ export class FeedManager extends VBase {
 
   public getOrderFeed = () =>
     this.getJSON<FeedStructure<ClerkOrder>>(BUCKET, ORDER_PATH, true)
+
+  public updateOrderIntegrationControl = async (locale: string) => {
+    const orderIntControl = await this.getOrderIntegrationControl()
+
+    return this.saveJSON(
+      BUCKET,
+      ORDER_INTEGRATION,
+      this.createOrderControl({ locale, orderIntControl })
+    )
+  }
+
+  public getOrderIntegrationControl = () =>
+    this.getJSON<OrderIntegrationControl | null>(
+      BUCKET,
+      ORDER_INTEGRATION,
+      true
+    )
+
+  private createOrderControl = ({
+    locale,
+    orderIntControl,
+  }: {
+    locale: string
+    orderIntControl: OrderIntegrationControl | null
+    // It should keep always the oldest reference to locale, since order feed is integrated only once
+  }) => ({ [locale]: new Date().getTime(), ...(orderIntControl ?? {}) })
 
   private productPath = (locale: string): string => `${PRODUCT_PATH}-${locale}`
   private feedStructure = <FeedType>(

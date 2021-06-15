@@ -1,7 +1,7 @@
 interface ClerkFeed {
   products: ClerkProduct[]
   categories: ClerkCategory[]
-  order?: ClerkOrder[]
+  orders?: ClerkOrder[]
   customers?: ClerkCustomer[]
   pages?: ClerkPage[]
   config: {
@@ -81,3 +81,5 @@ interface FeedStructure<FeedType> {
   data: FeedType[]
   createdAt: number
 }
+
+type OrderIntegrationControl = Record<string, number>
