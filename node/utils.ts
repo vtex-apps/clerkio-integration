@@ -1,4 +1,7 @@
-export function flattenArray(arr: CategoryTreeItem[], hostname: string) {
+export function prepareFeedCategories(
+  arr: CategoryTreeItem[],
+  hostname: string
+) {
   return arr.reduce(
     (result: ClerkCategory[], currentItem: CategoryTreeItem) => {
       const { id, name, url } = currentItem
@@ -16,7 +19,9 @@ export function flattenArray(arr: CategoryTreeItem[], hostname: string) {
           currentItem.children
         )
 
-        result = result.concat(flattenArray(currentItem.children, hostname))
+        result = result.concat(
+          prepareFeedCategories(currentItem.children, hostname)
+        )
       }
 
       return result

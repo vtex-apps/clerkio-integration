@@ -4,10 +4,16 @@ import type {
   RecorderState,
   ServiceContext,
 } from '@vtex/api'
-import { Service } from '@vtex/api'
+import { method, Service } from '@vtex/api'
 
 import { Clients } from './clients'
-import { flattenArray } from './utils'
+import {
+  errorHandler,
+  feed,
+  createFeedCategories,
+  createFeedProducts,
+  createFeedOrders,
+} from './middlewares'
 
 const TIMEOUT_MS = 800
 
@@ -28,31 +34,17 @@ declare global {
 export default new Service<Clients, RecorderState, ParamsContext>({
   clients,
   routes: {
-    feed: (ctx: Context) => {
-      const {
-        vtex: {
-          route: { params },
-        },
-      } = ctx
-
-      ctx.body = params
-    },
-    getCategories: async (ctx: Context) => {
-      const {
-        clients: { catalog },
-        hostname,
-      } = ctx
-
-      try {
-        const res = await catalog.getCategoryTree(6)
-        const feedCategories = flattenArray(res, hostname)
-
-        ctx.status = 200
-        ctx.body = feedCategories
-      } catch (error) {
-        ctx.status = error.status || 500
-        ctx.body = error.message
-      }
-    },
+    createFeedCategories: method({
+      POST: [errorHandler, createFeedCategories],
+    }),
+    createFeedProducts: method({
+      POST: [errorHandler, createFeedProducts],
+    }),
+    createFeedOrders: method({
+      POST: [errorHandler, createFeedOrders],
+    }),
+    feed: method({
+      GET: [errorHandler, feed],
+    }),
   },
 })
