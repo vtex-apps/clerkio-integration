@@ -8,11 +8,6 @@ export default class Catalog extends JanusClient {
     })
   }
 
-  public getCategoryTree = (levels: number) => {
-    const categoryLevels = levels
-
-    return this.http.get(
-      `/api/catalog_system/pub/category/tree/${categoryLevels}`
-    )
-  }
+  public getCategoryTree = (categoryLevels: number) =>
+    this.http.get(`/api/catalog_system/pub/category/tree/${categoryLevels}`)
 }

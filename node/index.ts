@@ -40,11 +40,12 @@ export default new Service<Clients, RecorderState, ParamsContext>({
     getCategories: async (ctx: Context) => {
       const {
         clients: { catalog },
+        hostname,
       } = ctx
 
       try {
         const res = await catalog.getCategoryTree(6)
-        const feedCategories = flattenArray(res)
+        const feedCategories = flattenArray(res, hostname)
 
         ctx.status = 200
         ctx.body = feedCategories

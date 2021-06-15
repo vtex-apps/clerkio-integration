@@ -1,4 +1,4 @@
-export function flattenArray(arr: CategoryTreeItem[]) {
+export function flattenArray(arr: CategoryTreeItem[], hostname: string) {
   return arr.reduce(
     (result: ClerkCategory[], currentItem: CategoryTreeItem) => {
       const { id, name, url } = currentItem
@@ -6,7 +6,7 @@ export function flattenArray(arr: CategoryTreeItem[]) {
         id: String(id),
         name,
         subcategories: [],
-        url,
+        url: url.replace('portal.vtexcommercestable.com.br', hostname),
       }
 
       result.push(category)
@@ -16,7 +16,7 @@ export function flattenArray(arr: CategoryTreeItem[]) {
           currentItem.children
         )
 
-        result = result.concat(flattenArray(currentItem.children))
+        result = result.concat(flattenArray(currentItem.children, hostname))
       }
 
       return result
