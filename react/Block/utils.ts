@@ -24,3 +24,15 @@ export const createClerkDataProps = ({
 
   return prop ? { [prop.propName]: values[prop.propField] } : {}
 }
+
+export const getCategoryIdFromContext = ({
+  type,
+  id,
+}: {
+  type: string
+  id: string
+}) => {
+  const categoryType = ['category', 'department']
+
+  return categoryType.some(catType => type === catType) ? id : ''
+}

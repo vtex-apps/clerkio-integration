@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react'
+import { useRuntime } from 'vtex.render-runtime'
 
 import { DATA_CATEGORY, DATA_KEYWORDS, logicTypes } from './constants'
-import { createClerkDataProps, ensureSingleWordClass } from './utils'
+import {
+  createClerkDataProps,
+  ensureSingleWordClass,
+  getCategoryIdFromContext,
+} from './utils'
 
 interface BlockProps {
   blockClassName: string
@@ -13,7 +18,6 @@ interface BlockProps {
 }
 
 const getUserEmail = () => 'test@test.com'
-const getCategoryIdFromContext = () => '1'
 const getProductsFromContext = () => ['1']
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
@@ -25,6 +29,12 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   keywords,
 }) => {
   const adjustedClassName = ensureSingleWordClass(blockClassName)
+
+  const {
+    route: {
+      pageContext: { type, id },
+    },
+  } = useRuntime()
 
   useEffect(() => {
     const { Clerk } = window
@@ -38,7 +48,9 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
     contentLogic,
     values: {
       keywords: keywords?.map(({ keyword }) => keyword),
-      categoryId: useContext ? getCategoryIdFromContext() : categoryId,
+      categoryId: useContext
+        ? getCategoryIdFromContext({ type, id })
+        : categoryId,
       userEmail: getUserEmail(),
       productIds: getProductsFromContext(),
     },
