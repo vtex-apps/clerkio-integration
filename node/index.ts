@@ -13,6 +13,7 @@ import {
   createFeedCategories,
   createFeedProducts,
   createFeedOrders,
+  sendResponse,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -35,13 +36,13 @@ export default new Service<Clients, RecorderState, ParamsContext>({
   clients,
   routes: {
     createFeedCategories: method({
-      POST: [errorHandler, createFeedCategories],
+      POST: [errorHandler, createFeedCategories, sendResponse],
     }),
     createFeedProducts: method({
-      POST: [errorHandler, createFeedProducts],
+      POST: [errorHandler, createFeedProducts, sendResponse],
     }),
     createFeedOrders: method({
-      POST: [errorHandler, createFeedOrders],
+      POST: [errorHandler, createFeedOrders, sendResponse],
     }),
     feed: method({
       GET: [errorHandler, feed],
