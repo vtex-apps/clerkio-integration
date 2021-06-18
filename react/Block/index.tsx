@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRuntime } from 'vtex.render-runtime'
+import { session } from 'vtex.store-resources/Queries'
+import { useQuery } from 'react-apollo'
 
 import { DATA_CATEGORY, DATA_KEYWORDS, logicTypes } from './constants'
 import {
@@ -17,7 +19,14 @@ interface BlockProps {
   keywords?: Array<Record<'keyword', string>>
 }
 
-const getUserEmail = () => 'test@test.com'
+interface Session {
+  getSession: {
+    profile: {
+      email: string
+    } | null
+  }
+}
+
 const getProductsFromContext = () => ['1']
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
@@ -36,13 +45,15 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
     },
   } = useRuntime()
 
+  const { data, loading } = useQuery<Session>(session)
+
   useEffect(() => {
     const { Clerk } = window
 
-    if (adjustedClassName && templateName && Clerk) {
+    if (adjustedClassName && templateName && Clerk && !loading) {
       Clerk('content', `.${adjustedClassName}`)
     }
-  }, [adjustedClassName, templateName])
+  }, [adjustedClassName, templateName, loading])
 
   const dataProps = createClerkDataProps({
     contentLogic,
@@ -51,14 +62,13 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
       categoryId: useContext
         ? getCategoryIdFromContext({ type, id })
         : categoryId,
-      userEmail: getUserEmail(),
+      userEmail: data?.getSession.profile?.email ?? '',
       productIds: getProductsFromContext(),
     },
   })
 
   return adjustedClassName && templateName ? (
     <div>
-      <h2>Clerk Io</h2>
       <span
         className={adjustedClassName}
         data-template={templateName}

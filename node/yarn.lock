@@ -1570,6 +1570,10 @@ vary@^1.1.2:
   version "8.128.4"
   resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.render-runtime@8.128.4/public/@types/vtex.render-runtime#63491782d44910c4edc8528bc645c7c335c33128"
 
+"vtex.store-resources@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-resources@0.80.0/public/@types/vtex.store-resources":
+  version "0.80.0"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-resources@0.80.0/public/@types/vtex.store-resources#6a8fcee940127f4e7adae84b26857a134328f236"
+
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
