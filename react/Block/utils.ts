@@ -32,7 +32,7 @@ export const getCategoryIdFromContext = ({
   type: string
   id: string
 }) => {
-  const categoryType = ['category', 'department']
+  const categoryType = ['category', 'department', 'subcategory']
 
   return categoryType.some(catType => type === catType) ? id : ''
 }
