@@ -36,3 +36,13 @@ export const getCategoryIdFromContext = ({
 
   return categoryType.some(catType => type === catType) ? id : ''
 }
+
+export const getProductIdFromContext = ({
+  type,
+  id,
+}: {
+  type: string
+  id: string
+}) => {
+  return type === 'product' ? [id] : ['']
+}

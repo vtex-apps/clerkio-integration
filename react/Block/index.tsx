@@ -8,6 +8,7 @@ import {
   createClerkDataProps,
   ensureSingleWordClass,
   getCategoryIdFromContext,
+  getProductIdFromContext,
 } from './utils'
 
 interface BlockProps {
@@ -26,8 +27,6 @@ interface Session {
     } | null
   }
 }
-
-const getProductsFromContext = () => ['1']
 
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   blockClassName,
@@ -63,7 +62,7 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
         ? getCategoryIdFromContext({ type, id })
         : categoryId,
       userEmail: data?.getSession.profile?.email ?? '',
-      productIds: getProductsFromContext(),
+      productIds: getProductIdFromContext({ type, id }),
     },
   })
 
