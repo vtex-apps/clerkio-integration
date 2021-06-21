@@ -11,9 +11,7 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "builders": {
     "admin": "0.x",
@@ -29,11 +27,7 @@
   },
   "policies": [
     {
-      "name": "outbound-access",
-      "attrs": {
-        "host": "portal.vtexcommercestable.com.br",
-        "path": "/api/*"
-      }
+      "name": "vbase-read-write"
     }
   ],
   "settingsSchema": {
