@@ -44,7 +44,9 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
     },
   } = useRuntime()
 
-  const { data, loading } = useQuery<Session>(session)
+  const { data, loading } = useQuery<Session>(session, {
+    ssr: false,
+  })
 
   useEffect(() => {
     const { Clerk } = window
