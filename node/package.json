@@ -10,7 +10,7 @@
     "typescript": "3.9.7"
   },
   "dependencies": {
-    "@vtex/api": "6.41.0"
+    "@vtex/api": "6.42.1"
   },
   "scripts": {
     "lint": "tsc --noEmit --pretty && tslint -c tslint.json './**/*.ts'"

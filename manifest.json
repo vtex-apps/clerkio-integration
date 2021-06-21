@@ -11,7 +11,9 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": ["*"]
+    "availableCountries": [
+      "*"
+    ]
   },
   "builders": {
     "admin": "0.x",
@@ -25,6 +27,15 @@
   "dependencies": {
     "vtex.pixel-interfaces": "1.x"
   },
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    }
+  ],
   "settingsSchema": {
     "title": "Clerk.io Integration",
     "type": "object",
