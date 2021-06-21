@@ -64,7 +64,7 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
         ? getCategoryIdFromContext({ type, id })
         : categoryId,
       userEmail: data?.getSession.profile?.email ?? '',
-      productIds: getProductIdFromContext({ type, id }),
+      productIds: `[${getProductIdFromContext({ type, id })}]`,
     },
   })
 

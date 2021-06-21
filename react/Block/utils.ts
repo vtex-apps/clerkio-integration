@@ -12,7 +12,7 @@ interface DataPropsArgs {
     categoryId?: string
     keywords?: string[]
     userEmail?: string
-    productIds?: string[]
+    productIds?: string
   }
 }
 
@@ -44,5 +44,5 @@ export const getProductIdFromContext = ({
   type: string
   id: string
 }) => {
-  return type === 'product' ? [id] : ['']
+  return type === 'product' ? id : ''
 }
