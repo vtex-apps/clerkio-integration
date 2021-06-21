@@ -25,6 +25,11 @@
   "dependencies": {
     "vtex.pixel-interfaces": "1.x"
   },
+  "policies": [
+    {
+      "name": "vbase-read-write"
+    }
+  ],
   "settingsSchema": {
     "title": "Clerk.io Integration",
     "type": "object",
@@ -36,10 +41,5 @@
       }
     }
   },
-  "policies": [
-    {
-      "name": "vbase-read-write"
-    }
-  ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
