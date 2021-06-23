@@ -1,7 +1,7 @@
 interface ClerkFeed {
   products: ClerkProduct[]
   categories: ClerkCategory[]
-  order?: ClerkOrder[]
+  orders?: ClerkOrder[]
   customers?: ClerkCustomer[]
   pages?: ClerkPage[]
   config: {
@@ -48,11 +48,11 @@ interface ClerkCategory {
 
 interface ClerkOrder {
   id: string
-  products: {
+  products: Array<{
     id: string
     quantity: number
     price: number
-  }
+  }>
   /**
    * The time of the order as a Unix Timestamp.
    *
@@ -75,4 +75,61 @@ interface ClerkPage {
   url: string
   title: string
   text: string
+}
+
+interface FeedStructure<FeedType> {
+  data: FeedType[]
+  createdAt: number
+}
+
+type OrderIntegrationControl = Record<string, number>
+
+interface IntegrationInfo {
+  /**
+   * The time when orders were integrated as a Unix Timestamp
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orderIntegratedAt: number
+  /**
+   * Number of products integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  products: number
+  /**
+   * Number of categories integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  categories: number
+  integratedAt: number
+}
+
+interface IntegrationInfoInput {
+  /**
+   * The time when orders were integrated as a Unix Timestamp
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orderIntegratedAt: number
+  /**
+   * Number of products integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  products: number
+  /**
+   * Number of categories integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  categories: number
+  locale: string
 }
