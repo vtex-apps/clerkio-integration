@@ -27,6 +27,11 @@
     "vtex.render-runtime": "8.x",
     "vtex.store-resources": "0.x"
   },
+  "policies": [
+    {
+      "name": "vbase-read-write"
+    }
+  ],
   "settingsSchema": {
     "title": "Clerk.io Integration",
     "type": "object",
