@@ -30,6 +30,7 @@
   "settingsSchema": {
     "title": "Clerk.io Integration",
     "type": "object",
+    "bindingBounded": true,
     "properties": {
       "clerkioToken": {
         "title": "Clerk.io Public API Key",
