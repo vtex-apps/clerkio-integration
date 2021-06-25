@@ -1,6 +1,4 @@
 {
-  "admin/clerkio.menu": "Clerk IO",
-  "admin/clerkio.navigation.search.kws": "clerkio, clerk, recomendação",
   "admin/cms/clerkio.title": "Clerk IO",
   "admin/cms/clerkio.description": "Store front block da prateleira de recomendação da integração co Clerk Io",
   "admin/cms/clerkio.block.class.name": "Nome da class para o block",

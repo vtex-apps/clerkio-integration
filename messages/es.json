@@ -1,6 +1,4 @@
 {
-  "admin/clerkio.menu": "Clerk IO",
-  "admin/clerkio.navigation.search.kws": "clerkio, clerk, recommendation",
   "admin/cms/clerkio.title": "Clerk IO",
   "admin/cms/clerkio.description": "Block that brings Clerk shelf",
   "admin/cms/clerkio.block.class.name": "Block Class Name",
