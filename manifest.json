@@ -14,7 +14,6 @@
     "availableCountries": ["*"]
   },
   "builders": {
-    "admin": "0.x",
     "messages": "1.x",
     "react": "3.x",
     "store": "0.x",
