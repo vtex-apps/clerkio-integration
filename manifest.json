@@ -40,6 +40,11 @@
         "title": "Clerk.io Public API Key",
         "description": "This is the public key to be used for authentication with the Clerk.io API",
         "type": "string"
+      },
+      "salesChannel": {
+        "title": "Sales Channel",
+        "description": "Sales Channel associated to the selected binding",
+        "type": "string"
       }
     }
   },
