@@ -1,3 +1,5 @@
+import { UserInputError } from '@vtex/api'
+
 export function prepareFeedCategories(
   arr: CategoryTreeItem[],
   hostname: string
@@ -32,4 +34,30 @@ export function prepareFeedCategories(
 
 function getAllSubcategoriesIds(arr: CategoryTreeItem[]) {
   return arr.map(item => String(item.id))
+}
+
+export function validateAppSettings(appConfig: AppConfig): boolean | void {
+  if (!appConfig.bindingBounded) {
+    throw new UserInputError('App needs to be binding bounded')
+  }
+
+  for (const setting of appConfig.settings) {
+    if (!setting.bindingId) {
+      throw new UserInputError(
+        'Missing bindingId for one or more configuration'
+      )
+    }
+
+    if (!setting.clerkioToken) {
+      throw new UserInputError(
+        'Missing Clerk.Io Token for one or more configuration'
+      )
+    }
+
+    if (!setting.salesChannel) {
+      throw new UserInputError(
+        'Missing Sales Channel for one or more configuration'
+      )
+    }
+  }
 }
