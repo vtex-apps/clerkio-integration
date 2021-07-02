@@ -164,7 +164,7 @@ export default new Service<Clients, RecorderState, ParamsContext>({
       POST: [errorHandler, createFeedProducts, sendResponse],
     }),
     createFeedOrders: method({
-      POST: [errorHandler, createFeedOrders, sendResponse],
+      POST: [createFeedOrders, sendResponse],
     }),
     feed: method({
       GET: [errorHandler, feed],
