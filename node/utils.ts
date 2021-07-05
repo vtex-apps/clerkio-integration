@@ -61,3 +61,28 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
     }
   }
 }
+
+const ORDER_RANGE_DAYS = 10
+const DAY_MS = 1000 * 60 * 60 * 24
+
+function getDayRange(date: Date): string[] {
+  const start = new Date(date.getTime())
+  const end = new Date(date.getTime())
+
+  end.setDate(start.getDate() - 1)
+
+  return [`${end.toISOString()} TO ${start.toISOString()}`]
+}
+
+export function generateDatePair(): string[][] {
+  const today = new Date()
+  const pairs: string[][] = []
+
+  for (let i = 0; i < ORDER_RANGE_DAYS; i++) {
+    const currDate = new Date(today.getTime() - i * DAY_MS)
+
+    pairs.push(getDayRange(currDate))
+  }
+
+  return pairs
+}
