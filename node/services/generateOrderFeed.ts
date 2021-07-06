@@ -1,4 +1,9 @@
-import { extractOrderList, generateDatePair } from '../utils'
+import {
+  extractOrderList,
+  generateDatePair,
+  pacer,
+  transformOrderToClerk,
+} from '../utils'
 
 export const generateOrderFeed = async (ctx: Context) => {
   const {
@@ -18,6 +23,8 @@ export const generateOrderFeed = async (ctx: Context) => {
       })
 
       orderListPromiseColletion.push(orderListPromise)
+      // eslint-disable-next-line no-await-in-loop
+      await pacer()
     }
 
     const ordersCollection = await Promise.all(orderListPromiseColletion)
@@ -39,6 +46,9 @@ export const generateOrderFeed = async (ctx: Context) => {
         })
 
         remainingPagesPromises.push(orderListPromise)
+
+        // eslint-disable-next-line no-await-in-loop
+        await pacer()
       }
     }
 
@@ -49,13 +59,23 @@ export const generateOrderFeed = async (ctx: Context) => {
       ...remainingPages
     )
 
-    // eslint-disable-next-line no-console
-    console.log({ allOrders: extractedOrders.length })
+    const orderDetailedPromises = []
 
-    // const singleOrder = await orders.order('1134930567638-01')
+    for (const { orderId } of extractedOrders) {
+      const orderDetailPromise = orders.order(orderId)
+
+      orderDetailedPromises.push(orderDetailPromise)
+
+      // eslint-disable-next-line no-await-in-loop
+      await pacer()
+    }
+
+    const allOrders = await Promise.all(orderDetailedPromises)
+
+    const orderFeedData = allOrders.map(transformOrderToClerk)
 
     // eslint-disable-next-line no-console
-    console.log(ordersDateRange[0], ordersDateRange[ordersDateRange.length - 1])
+    console.log({ allOrders: orderFeedData.length })
 
     // logger.info({
     //   message: 'Order feed generated successfully',

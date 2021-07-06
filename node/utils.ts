@@ -62,7 +62,7 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
   }
 }
 
-const ORDER_RANGE_DAYS = 100
+const ORDER_RANGE_DAYS = 365
 const DAY_MS = 1000 * 60 * 60 * 24
 
 function getDayRange(date: Date): string {
@@ -102,4 +102,30 @@ export function extractOrderList(...args: OrderListResponse[]) {
   return args.reduce<OrderSummary[]>((acc, cur) => {
     return [...acc, ...cur.list]
   }, [])
+}
+
+export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
+  return {
+    id: orderDetails.orderId,
+    time: new Date(orderDetails.creationDate).getTime(),
+    email: orderDetails.clientProfileData.email,
+    products: orderDetails.items.map(item => {
+      return {
+        id: item.id,
+        price: item.sellingPrice / 100,
+        quantity: item.quantity,
+      }
+    }),
+  }
+}
+
+const ONE_MINUTE = 60 * 1000
+const CALLS_PER_MINUTE = 2500
+
+export function pacer() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('done')
+    }, ONE_MINUTE / CALLS_PER_MINUTE)
+  })
 }
