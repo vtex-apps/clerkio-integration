@@ -36,6 +36,9 @@
         "host": "portal.vtexcommercestable.com.br",
         "path": "/api/oms/pvt/orders/*"
       }
+    },
+    {
+      "name": "OMSViewer"
     }
   ],
   "settingsSchema": {
