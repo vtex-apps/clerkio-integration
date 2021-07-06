@@ -6,17 +6,6 @@ interface CategoryTreeItem {
   children: CategoryTreeItem[]
 }
 
-interface AppConfig {
-  bindingBounded: boolean
-  settings: BindingAppConfig[]
-}
-
-interface BindingAppConfig {
-  bindingId: string
-  clerkioToken: string
-  salesChannel: string
-}
-
 interface OrderListResponse {
   list: OrderSummary[]
   paging: {

@@ -1,6 +1,8 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { JanusClient } from '@vtex/api'
 
+import { createListOrderParams } from '../utils'
+
 export default class Orders extends JanusClient {
   constructor(context: IOContext, options?: InstanceOptions) {
     super(context, {
@@ -12,8 +14,15 @@ export default class Orders extends JanusClient {
     })
   }
 
-  public listorders() {
-    return this.http.get<OrderListResponse>(this.routes.listOrders())
+  public listorders({
+    creationDate,
+    page,
+  }: ListOrderParams): Promise<OrderListResponse> {
+    const filterParams = createListOrderParams({ creationDate, page })
+
+    return this.http.get<OrderListResponse>(this.routes.listOrders(), {
+      params: filterParams,
+    })
   }
 
   public order(orderId: string) {

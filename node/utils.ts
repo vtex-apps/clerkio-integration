@@ -62,21 +62,21 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
   }
 }
 
-const ORDER_RANGE_DAYS = 10
+const ORDER_RANGE_DAYS = 100
 const DAY_MS = 1000 * 60 * 60 * 24
 
-function getDayRange(date: Date): string[] {
+function getDayRange(date: Date): string {
   const start = new Date(date.getTime())
   const end = new Date(date.getTime())
 
   end.setDate(start.getDate() - 1)
 
-  return [`${end.toISOString()} TO ${start.toISOString()}`]
+  return `${end.toISOString()} TO ${start.toISOString()}`
 }
 
-export function generateDatePair(): string[][] {
+export function generateDatePair(): string[] {
   const today = new Date()
-  const pairs: string[][] = []
+  const pairs: string[] = []
 
   for (let i = 0; i < ORDER_RANGE_DAYS; i++) {
     const currDate = new Date(today.getTime() - i * DAY_MS)
@@ -85,4 +85,21 @@ export function generateDatePair(): string[][] {
   }
 
   return pairs
+}
+
+export function createListOrderParams({
+  creationDate,
+  page = 1,
+}: ListOrderParams) {
+  return {
+    f_creationDate: `creationDate:[${creationDate}]`,
+    page,
+    per_page: 100,
+  }
+}
+
+export function extractOrderList(...args: OrderListResponse[]) {
+  return args.reduce<OrderSummary[]>((acc, cur) => {
+    return [...acc, ...cur.list]
+  }, [])
 }
