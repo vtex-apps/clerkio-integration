@@ -7,8 +7,8 @@ import {
 
 export const generateOrderFeed = async (ctx: Context) => {
   const {
-    clients: { orders },
-    // vtex: { logger },
+    clients: { orders, feedManager },
+    vtex: { logger },
   } = ctx
 
   try {
@@ -72,18 +72,20 @@ export const generateOrderFeed = async (ctx: Context) => {
 
     const allOrders = await Promise.all(orderDetailedPromises)
 
-    const orderFeedData = allOrders.map(transformOrderToClerk)
+    const orderFeed = allOrders.map(transformOrderToClerk)
 
-    // eslint-disable-next-line no-console
-    console.log({ allOrders: orderFeedData.length })
+    await feedManager.saveOrderFeed({ orderFeed })
 
-    // logger.info({
-    //   message: 'Order feed generated successfully',
-    //   date: new Date(),
-    // })
+    logger.info({
+      message: 'Order feed generated successfully',
+      date: new Date(),
+    })
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log({ e })
+    logger.error({
+      message: 'Error generating order feed',
+      date: new Date(),
+      error: e,
+    })
   }
 
   return 'generate orders'
