@@ -18,7 +18,7 @@ export const generateOrderFeed = async (ctx: Context) => {
   } catch (e) {
     logger.error({
       message: 'Error generating order feed status',
-      date: new Date(),
+      date: new Date().toString(),
       error: e,
     })
   }
@@ -92,28 +92,32 @@ export const generateOrderFeed = async (ctx: Context) => {
 
     await feedManager.saveOrderFeed({ orderFeed })
 
+    const finishedAt = new Date().toString()
+
     const feedStatusUpdated = {
       ...feedStatus,
-      ...{ finishedAt: new Date().toString(), entries: orderFeed.length },
+      ...{ finishedAt, entries: orderFeed.length },
     }
 
     await feedManager.updateFeedStatus(feedStatusUpdated)
 
     logger.info({
       message: 'Order feed generated successfully',
-      date: new Date(),
+      date: finishedAt,
     })
   } catch (e) {
+    const finishedAt = new Date().toString()
+
     const feedStatusUpdated = {
       ...feedStatus,
-      ...{ finishedAt: new Date().toString(), error: true },
+      ...{ finishedAt, error: true },
     }
 
     await feedManager.updateFeedStatus(feedStatusUpdated)
 
     logger.error({
       message: 'Error generating order feed',
-      date: new Date(),
+      date: finishedAt,
       error: e,
     })
   }

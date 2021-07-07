@@ -18,6 +18,10 @@
       "path": "/_v/clerkio-integration/feed/orders",
       "public": false
     },
+    "feedStatus": {
+      "path": "/_v/clerkio-integration/feed/status/:type",
+      "public": true
+    },
     "feed": {
       "path": "/_v/clerkio-integration/feed/:language",
       "public": true

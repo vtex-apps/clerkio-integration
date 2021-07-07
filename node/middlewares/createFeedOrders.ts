@@ -10,7 +10,7 @@ export async function createFeedOrders(
 
   const feedStatus = await feedManager.getFeedStatus('order')
 
-  if (!feedStatus?.finishedAt) {
+  if (feedStatus && !feedStatus.finishedAt) {
     ctx.status = 200
     ctx.body = {
       message: 'Feed order already in progress',

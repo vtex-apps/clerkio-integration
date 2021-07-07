@@ -89,7 +89,7 @@ export class FeedManager extends VBase {
 
     await this.saveJSON(BUCKET, this.statusPath(type), feedStatusStructure)
 
-    return this.getFeedStatus(type)
+    return feedStatusStructure
   }
 
   public getFeedStatus = (type: FeedType) =>

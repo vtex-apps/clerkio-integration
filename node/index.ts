@@ -14,6 +14,7 @@ import {
   createFeedProducts,
   createFeedOrders,
   sendResponse,
+  feedStatus,
 } from './middlewares'
 import { parseAppSetings } from './middlewares/parseAppSettings'
 
@@ -173,6 +174,9 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     feed: method({
       GET: [errorHandler, feed],
+    }),
+    feedStatus: method({
+      GET: [errorHandler, feedStatus],
     }),
   },
 })
