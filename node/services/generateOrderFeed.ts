@@ -11,6 +11,22 @@ export const generateOrderFeed = async (ctx: Context) => {
     vtex: { logger },
   } = ctx
 
+  let feedStatus
+
+  try {
+    feedStatus = await feedManager.createFeedStatus('order')
+  } catch (e) {
+    logger.error({
+      message: 'Error generating order feed status',
+      date: new Date(),
+      error: e,
+    })
+  }
+
+  if (!feedStatus) {
+    return
+  }
+
   try {
     const ordersDateRange = generateDatePair()
 
@@ -76,11 +92,25 @@ export const generateOrderFeed = async (ctx: Context) => {
 
     await feedManager.saveOrderFeed({ orderFeed })
 
+    const feedStatusUpdated = {
+      ...feedStatus,
+      ...{ finishedAt: new Date().toString(), entries: orderFeed.length },
+    }
+
+    await feedManager.updateFeedStatus(feedStatusUpdated)
+
     logger.info({
       message: 'Order feed generated successfully',
       date: new Date(),
     })
   } catch (e) {
+    const feedStatusUpdated = {
+      ...feedStatus,
+      ...{ finishedAt: new Date().toString(), error: true },
+    }
+
+    await feedManager.updateFeedStatus(feedStatusUpdated)
+
     logger.error({
       message: 'Error generating order feed',
       date: new Date(),
