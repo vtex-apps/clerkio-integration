@@ -77,8 +77,8 @@ interface ClerkPage {
   text: string
 }
 
-interface FeedStructure<FeedType> {
-  data: FeedType[]
+interface FeedStructure<FeedDataType> {
+  data: FeedDataType[]
   createdAt: number
 }
 
