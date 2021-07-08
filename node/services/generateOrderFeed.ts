@@ -40,7 +40,7 @@ export const generateOrderFeed = async (ctx: Context) => {
 
       orderListPromiseColletion.push(orderListPromise)
       // eslint-disable-next-line no-await-in-loop
-      await pacer()
+      await pacer(2000)
     }
 
     const ordersCollection = await Promise.all(orderListPromiseColletion)
@@ -64,7 +64,7 @@ export const generateOrderFeed = async (ctx: Context) => {
         remainingPagesPromises.push(orderListPromise)
 
         // eslint-disable-next-line no-await-in-loop
-        await pacer()
+        await pacer(2000)
       }
     }
 
@@ -83,7 +83,7 @@ export const generateOrderFeed = async (ctx: Context) => {
       orderDetailedPromises.push(orderDetailPromise)
 
       // eslint-disable-next-line no-await-in-loop
-      await pacer()
+      await pacer(2000)
     }
 
     const allOrders = await Promise.all(orderDetailedPromises)

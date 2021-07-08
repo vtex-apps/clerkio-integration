@@ -62,7 +62,7 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
   }
 }
 
-const ORDER_RANGE_DAYS = 365
+const ORDER_RANGE_DAYS = 90
 const DAY_MS = 1000 * 60 * 60 * 24
 
 function getDayRange(date: Date): string {
@@ -120,12 +120,11 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
 }
 
 const ONE_MINUTE = 60 * 1000
-const CALLS_PER_MINUTE = 2500
 
-export function pacer() {
+export function pacer(callsPerMinute: number) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('done')
-    }, ONE_MINUTE / CALLS_PER_MINUTE)
+    }, ONE_MINUTE / callsPerMinute)
   })
 }

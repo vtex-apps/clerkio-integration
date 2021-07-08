@@ -19,6 +19,7 @@ import {
 import { parseAppSetings } from './middlewares/parseAppSettings'
 
 const TIMEOUT_MS = 800
+const LONG_TIMEOUT_MS = 1200
 
 const clients: ClientsConfig<Clients> = {
   implementation: Clients,
@@ -26,6 +27,10 @@ const clients: ClientsConfig<Clients> = {
     default: {
       retries: 2,
       timeout: TIMEOUT_MS,
+    },
+    orders: {
+      retries: 4,
+      timeout: LONG_TIMEOUT_MS,
     },
   },
 }
