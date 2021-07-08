@@ -104,11 +104,26 @@ export function extractOrderList(...args: OrderListResponse[]) {
   }, [])
 }
 
+const CONVERSATION_TRACKER = '.ct.vtex.com.br'
+
+function normalizeEmailSoftEncrypt(email: string): string {
+  const splitted = email.split(CONVERSATION_TRACKER)
+
+  if (splitted.length < 2) {
+    return email
+  }
+
+  const [emailWithDash] = splitted
+  const i = emailWithDash.lastIndexOf('-')
+
+  return emailWithDash.slice(0, i)
+}
+
 export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   return {
     id: orderDetails.orderId,
     time: new Date(orderDetails.creationDate).getTime(),
-    email: orderDetails.clientProfileData.email,
+    email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
     products: orderDetails.items.map(item => {
       return {
         id: item.id,
