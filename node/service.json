@@ -1,9 +1,9 @@
 {
-  "memory": 1024,
+  "memory": 2048,
   "ttl": 10,
   "timeout": 5,
   "minReplicas": 4,
-  "maxReplicas": 10,
+  "maxReplicas": 20,
   "workers": 4,
   "routes": {
     "createFeedCategories": {
@@ -23,7 +23,7 @@
       "public": true
     },
     "feed": {
-      "path": "/_v/clerkio-integration/feed/:language",
+      "path": "/_v/clerkio-integration/clerk-feed/:language",
       "public": false
     },
     "feedManagerTest": {
