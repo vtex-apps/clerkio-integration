@@ -36,10 +36,10 @@ export default new Service<Clients, RecorderState, ParamsContext>({
   clients,
   routes: {
     createFeedCategories: method({
-      POST: [errorHandler, createFeedCategories, sendResponse],
+      POST: [createFeedCategories, sendResponse],
     }),
     createFeedProducts: method({
-      POST: [errorHandler, createFeedProducts, sendResponse],
+      POST: [createFeedProducts, sendResponse],
     }),
     createFeedOrders: method({
       POST: [errorHandler, createFeedOrders, sendResponse],

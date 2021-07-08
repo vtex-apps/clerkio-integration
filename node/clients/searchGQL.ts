@@ -1,39 +1,27 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
-import { AppGraphQLClient } from '@vtex/api'
+import { AppClient, GraphQLClient } from '@vtex/api'
+import type { GraphQLResponse } from '@vtex/api/lib/service/worker/runtime/graphql/typings'
 
-// const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
+export default class SearchGQL extends AppClient {
+  protected graphql: GraphQLClient
 
-const PRODUCTS_QUERY = `
-query {
-  products(query:"") @context(provider: "vtex.search-graphql") {
-    categoryId
-    productId
-    productName
-  }
-}`
-
-export default class SearchGQL extends AppGraphQLClient {
-  constructor(ctx: IOContext, opts?: InstanceOptions) {
-    super('vtex.search-graphql@0.x', ctx, {
-      ...opts,
-      headers: {
-        'x-vtex-locale': 'en-EN',
-      },
-    })
+  constructor(ctx: IOContext, options?: InstanceOptions) {
+    super('vtex.graphql-server@1.x', ctx, options)
+    this.graphql = new GraphQLClient(this.http)
   }
 
-  public getProducts = async (query: string) => {
+  public query = async (query: string): Promise<GraphQLResponse> => {
     return this.graphql
-      .query<any, any>(
+      .query(
         {
-          query: PRODUCTS_QUERY,
-          variables: { query },
           extensions: {
             persistedQuery: {
               provider: 'vtex.search-graphql@0.x',
               sender: 'vtex.store-sitemap@2.x',
             },
           },
+          query,
+          variables: { query },
         },
         {
           params: {
@@ -42,12 +30,6 @@ export default class SearchGQL extends AppGraphQLClient {
           url: '/graphql',
         }
       )
-      .then(res => {
-        // eslint-disable-next-line no-console
-        console.log('res', res)
-
-        return res
-      })
-      .catch(res => res.graphQLErrors)
+      .catch(err => err)
   }
 }

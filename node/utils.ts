@@ -1,35 +1,10 @@
-export function prepareFeedCategories(
-  arr: CategoryTreeItem[],
-  hostname: string
-) {
-  return arr.reduce(
-    (result: ClerkCategory[], currentItem: CategoryTreeItem) => {
-      const { id, name, url } = currentItem
-      const category: ClerkCategory = {
-        id: String(id),
-        name,
-        subcategories: [],
-        url: url.replace('portal.vtexcommercestable.com.br', hostname),
-      }
+export const pacer = (time: number) =>
+  new Promise(resolve => setTimeout(resolve, time))
 
-      result.push(category)
+export const getAllSubcategoriesIds = (arr: CategoryTreeItem[]) =>
+  arr.map(item => String(item.id))
 
-      if (currentItem.hasChildren) {
-        result[result.length - 1].subcategories = getAllSubcategoriesIds(
-          currentItem.children
-        )
+export const extractAllProductIds = (products: ProductAndSkuIds['data']) =>
+  Object.keys(products)
 
-        result = result.concat(
-          prepareFeedCategories(currentItem.children, hostname)
-        )
-      }
-
-      return result
-    },
-    []
-  )
-}
-
-function getAllSubcategoriesIds(arr: CategoryTreeItem[]) {
-  return arr.map(item => String(item.id))
-}
+export const iterationLimits = (step: number) => [50 * step + 1, 50 * step + 50]

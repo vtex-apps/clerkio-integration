@@ -25,7 +25,9 @@
     "node": "6.x"
   },
   "dependencies": {
-    "vtex.pixel-interfaces": "1.x"
+    "vtex.pixel-interfaces": "1.x",
+    "vtex.catalog-graphql": "1.x",
+    "vtex.graphql-server": "1.x"
   },
   "policies": [
     {
@@ -34,6 +36,12 @@
         "host": "portal.vtexcommercestable.com.br",
         "path": "/api/*"
       }
+    },
+    {
+      "name": "vtex.catalog-graphql:resolve-graphql"
+    },
+    {
+      "name": "vtex.graphql-server:resolve-graphql"
     }
   ],
   "settingsSchema": {

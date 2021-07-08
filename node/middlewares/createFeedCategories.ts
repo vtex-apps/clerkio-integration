@@ -1,16 +1,16 @@
-import { prepareFeedCategories } from '../utils'
+import { prepareFeedCategories } from '../services/categories'
 
 export async function createFeedCategories(
   ctx: Context,
   next: () => Promise<void>
 ) {
+  // Send response and process feed categories async
+  await next()
+
   const {
     hostname,
     clients: { catalog },
   } = ctx
-
-  // Send response and process feed categories async
-  await next()
 
   try {
     const categoryLevels = 6

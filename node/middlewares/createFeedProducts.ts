@@ -1,3 +1,5 @@
+import { prepareFeedProducts } from '../services/products'
+
 export async function createFeedProducts(
   ctx: Context,
   next: () => Promise<void>
@@ -5,10 +7,18 @@ export async function createFeedProducts(
   // Send response and process feed products async
   await next()
 
+  const {
+    vtex: { logger },
+  } = ctx
+
   try {
-    // This will be replaced. We will save the processed feed to VBase
-    ctx.body = 'CreateFeedProducts '
+    prepareFeedProducts(ctx)
   } catch (error) {
+    logger.error({
+      message: 'Feed products could not be created',
+      data: error.data,
+    })
+
     throw new Error(error)
   }
 }
