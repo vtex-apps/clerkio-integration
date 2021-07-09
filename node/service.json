@@ -21,6 +21,10 @@
     "feed": {
       "path": "/_v/clerkio-integration/feed/:language",
       "public": true
+    },
+    "feedManagerTest": {
+      "path": "/_v/clerkio-integration/feed-test/:feedType/:locale",
+      "public": true
     }
   }
 }
