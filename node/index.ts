@@ -14,9 +14,12 @@ import {
   createFeedProducts,
   createFeedOrders,
   sendResponse,
+  feedStatus,
 } from './middlewares'
+import { parseAppSetings } from './middlewares/parseAppSettings'
 
 const TIMEOUT_MS = 800
+const LONG_TIMEOUT_MS = 1200
 
 const clients: ClientsConfig<Clients> = {
   implementation: Clients,
@@ -25,14 +28,22 @@ const clients: ClientsConfig<Clients> = {
       retries: 2,
       timeout: TIMEOUT_MS,
     },
+    orders: {
+      retries: 4,
+      timeout: LONG_TIMEOUT_MS,
+    },
   },
 }
 
 declare global {
-  type Context = ServiceContext<Clients>
+  type Context = ServiceContext<Clients, State>
+
+  interface State extends RecorderState {
+    appConfig: AppConfig
+  }
 }
 
-export default new Service<Clients, RecorderState, ParamsContext>({
+export default new Service<Clients, State, ParamsContext>({
   clients,
   routes: {
     /**
@@ -164,10 +175,13 @@ export default new Service<Clients, RecorderState, ParamsContext>({
       POST: [errorHandler, createFeedProducts, sendResponse],
     }),
     createFeedOrders: method({
-      POST: [errorHandler, createFeedOrders, sendResponse],
+      POST: [errorHandler, parseAppSetings, createFeedOrders, sendResponse],
     }),
     feed: method({
       GET: [errorHandler, feed],
+    }),
+    feedStatus: method({
+      GET: [errorHandler, feedStatus],
     }),
   },
 })
