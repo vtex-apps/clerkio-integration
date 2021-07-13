@@ -11,7 +11,9 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": ["*"]
+    "availableCountries": [
+      "*"
+    ]
   },
   "builders": {
     "messages": "1.x",
@@ -44,6 +46,16 @@
     },
     {
       "name": "vbase-read-write"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/oms/pvt/orders/*"
+      }
+    },
+    {
+      "name": "OMSViewer"
     }
   ],
   "settingsSchema": {
@@ -54,6 +66,11 @@
       "clerkioToken": {
         "title": "Clerk.io Public API Key",
         "description": "This is the public key to be used for authentication with the Clerk.io API",
+        "type": "string"
+      },
+      "salesChannel": {
+        "title": "Sales Channel",
+        "description": "Sales Channel associated to the selected binding",
         "type": "string"
       }
     }

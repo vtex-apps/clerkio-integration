@@ -1,10 +1,10 @@
 {
-  "memory": 256,
+  "memory": 2048,
   "ttl": 10,
-  "timeout": 2,
-  "minReplicas": 2,
-  "maxReplicas": 4,
-  "workers": 1,
+  "timeout": 5,
+  "minReplicas": 4,
+  "maxReplicas": 20,
+  "workers": 4,
   "routes": {
     "createFeedCategories": {
       "path": "/_v/clerkio-integration/feed/categories",
@@ -18,9 +18,13 @@
       "path": "/_v/clerkio-integration/feed/orders",
       "public": false
     },
-    "feed": {
-      "path": "/_v/clerkio-integration/feed/:language",
+    "feedStatus": {
+      "path": "/_v/clerkio-integration/feed/status/:type",
       "public": true
+    },
+    "feed": {
+      "path": "/_v/clerkio-integration/clerk-feed/:language",
+      "public": false
     },
     "feedManagerTest": {
       "path": "/_v/clerkio-integration/feed-test/:feedType/:locale",

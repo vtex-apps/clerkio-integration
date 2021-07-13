@@ -17,7 +17,7 @@ export default class SearchGQL extends AppClient {
           extensions: {
             persistedQuery: {
               provider: 'vtex.search-graphql@0.x',
-              sender: 'vtex.store-sitemap@2.x',
+              sender: 'vtex.clerkio-integration@0.x',
             },
           },
           query,

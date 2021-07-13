@@ -25,11 +25,12 @@ interface ClerkProduct {
   id: string
   name: string
   description: string
-  price: string
-  list_price?: string
+  price: number
+  list_price?: number
   image: string
   url: string
-  categories: string[]
+  categories: number[]
+  brand?: string
   /**
    * Unix timestamp for when the product was created.
    *
@@ -77,8 +78,8 @@ interface ClerkPage {
   text: string
 }
 
-interface FeedStructure<FeedType> {
-  data: FeedType[]
+interface FeedStructure<FeedDataType> {
+  data: FeedDataType[]
   createdAt: number
 }
 

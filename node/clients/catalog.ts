@@ -11,7 +11,9 @@ export default class Catalog extends JanusClient {
     })
   }
 
-  public getCategoryTree = (categoryLevels: number) =>
+  public getCategoryTree = (
+    categoryLevels: number
+  ): Promise<CategoryTreeItem[]> =>
     this.http.get(`/api/catalog_system/pub/category/tree/${categoryLevels}`)
 
   public getProductAndSkuIds = (

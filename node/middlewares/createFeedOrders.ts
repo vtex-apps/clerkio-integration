@@ -1,14 +1,27 @@
+import { generateOrderFeed } from '../services/generateOrderFeed'
+
 export async function createFeedOrders(
   ctx: Context,
   next: () => Promise<void>
 ) {
+  const {
+    clients: { feedManager },
+  } = ctx
+
+  const feedStatus = await feedManager.getFeedStatus('order')
+
+  if (feedStatus && !feedStatus.finishedAt) {
+    ctx.status = 200
+    ctx.body = {
+      message: 'Feed order already in progress',
+      data: feedStatus,
+    }
+
+    return
+  }
+
   // Send response and process feed orders async
   await next()
 
-  try {
-    // This will be replaced. We will save the processed feed to VBase
-    ctx.body = 'CreateFeedOrders'
-  } catch (error) {
-    throw new Error(error)
-  }
+  generateOrderFeed(ctx)
 }
