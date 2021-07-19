@@ -192,3 +192,19 @@ export function pacer(callsPerMinute: number) {
     }, ONE_MINUTE / callsPerMinute)
   })
 }
+
+const TWO_HOURS = 4 * 60 * 60 * 1000
+
+export function feedInProgress(feedStatus: FeedStatus) {
+  const startDate = feedStatus.startedAt as string
+  const finishDate = feedStatus.finishedAt as string
+
+  const startedAt = new Date(startDate).getTime()
+  const finishedAt = new Date(finishDate).getTime()
+
+  if (!finishedAt && startedAt < TWO_HOURS) {
+    return true
+  }
+
+  return false
+}
