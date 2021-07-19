@@ -1,5 +1,5 @@
 export * from './errorHandler'
-export * from './feed'
+export * from './getFeed'
 export * from './createFeedCategories'
 export * from './createFeedProducts'
 export * from './createFeedOrders'
