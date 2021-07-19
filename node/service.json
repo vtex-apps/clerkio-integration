@@ -23,7 +23,7 @@
       "public": true
     },
     "feed": {
-      "path": "/_v/clerkio-integration/clerk-feed/:language",
+      "path": "/_v/clerkio-integration/clerk-feed/:locale",
       "public": false
     },
     "feedManagerTest": {

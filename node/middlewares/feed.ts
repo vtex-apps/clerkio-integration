@@ -1,4 +1,4 @@
-export async function feed(ctx: Context) {
+export async function getFeed(ctx: Context) {
   const {
     clients: { feedManager },
     vtex: {
@@ -6,14 +6,23 @@ export async function feed(ctx: Context) {
     },
   } = ctx
 
-  // eslint-disable-next-line no-console
-  console.log({ params })
+  const locale = params.locale as string
 
-  const orders = await feedManager.getOrderFeed()
+  const productsPromise = feedManager.getProductFeed(locale)
+  const categoriesPromise = feedManager.getCategoryFeed()
+  const ordersPromise = feedManager.getOrderFeed()
 
-  ctx.body = {
-    products: [],
-    categories: [],
-    orders,
+  const [products, categories, orders] = await Promise.all([
+    productsPromise,
+    categoriesPromise,
+    ordersPromise,
+  ])
+
+  const clerkFeed = {
+    products: products?.data,
+    categories: categories?.data,
+    orders: orders?.data,
   }
+
+  ctx.body = clerkFeed
 }

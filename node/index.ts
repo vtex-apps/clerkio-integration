@@ -9,7 +9,7 @@ import { method, Service } from '@vtex/api'
 import { Clients } from './clients'
 import {
   errorHandler,
-  feed,
+  getFeed,
   createFeedCategories,
   createFeedProducts,
   createFeedOrders,
@@ -178,7 +178,7 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, parseAppSetings, createFeedOrders, sendResponse],
     }),
     feed: method({
-      GET: [errorHandler, feed],
+      GET: [errorHandler, parseAppSetings, getFeed],
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],
