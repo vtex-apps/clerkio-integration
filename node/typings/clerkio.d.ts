@@ -45,6 +45,7 @@ interface ClerkCategory {
   name: string
   url: string
   subcategories: string[]
+  description?: string
 }
 
 interface ClerkOrder {

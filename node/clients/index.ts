@@ -2,7 +2,7 @@ import { IOClients } from '@vtex/api'
 
 import { FeedManager } from './FeedManager'
 import Catalog from './catalog'
-import searchGQL from './searchGQL'
+import GraphQLServer from './graphqlServer'
 import Orders from './orders'
 
 export class Clients extends IOClients {
@@ -14,8 +14,8 @@ export class Clients extends IOClients {
     return this.getOrSet('feedManager', FeedManager)
   }
 
-  public get searchGQL() {
-    return this.getOrSet('searchGQL', searchGQL)
+  public get graphQLServer() {
+    return this.getOrSet('graphqlServer', GraphQLServer)
   }
 
   public get orders() {

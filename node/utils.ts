@@ -110,6 +110,25 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   }
 }
 
+const VTEX_STORE_FRONT = 'vtex-storefront'
+
+export function extractLocales(bindings: Binding[]) {
+  return bindings.reduce((locales: string[], binding) => {
+    const { defaultLocale, targetProduct } = binding
+
+    if (
+      targetProduct === VTEX_STORE_FRONT &&
+      !locales.includes(defaultLocale)
+    ) {
+      locales.push(defaultLocale)
+
+      return locales
+    }
+
+    return locales
+  }, [])
+}
+
 export function transformProductToClerk(product: QueryProduct): ClerkProduct {
   const dateString = product.releaseDate ?? new Date()
   const date = new Date(dateString).getTime()

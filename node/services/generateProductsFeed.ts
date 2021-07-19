@@ -1,12 +1,58 @@
 import {
   extractAllProductIds,
+  extractLocales,
   iterationLimits,
   transformProductToClerk,
+  pacer,
 } from '../utils'
+
+const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
+const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'
+
+const createProductsQuery = (productIds: string[]) => `query {
+    productsByIdentifier (
+      field: id
+      values: [${productIds}]
+    ) {
+      productId
+      productName
+      description
+      priceRange {
+        sellingPrice {
+          highPrice
+          lowPrice
+        }
+        listPrice {
+          highPrice
+          lowPrice
+        }
+      }
+      items {
+        images {
+          imageUrl
+        }
+      }
+      link
+      categoryTree {
+        id
+      }
+      brand
+      releaseDate
+    }
+  }`
+
+const createBindingsQuery = `query {
+    tenantInfo {
+      bindings {
+        defaultLocale
+        targetProduct
+      }
+    }
+  }`
 
 export async function generateProductsFeed(ctx: Context) {
   const {
-    clients: { catalog, feedManager, searchGQL },
+    clients: { catalog, feedManager, graphQLServer },
     vtex: { logger },
   } = ctx
 
@@ -14,15 +60,40 @@ export async function generateProductsFeed(ctx: Context) {
 
   try {
     feedStatus = await feedManager.createFeedStatus('product')
-  } catch (e) {
+  } catch (error) {
     logger.error({
       message: 'Error generating product feed status',
       date: new Date().toString(),
-      error: e,
+      error,
     })
   }
 
   if (!feedStatus) {
+    return
+  }
+
+  let locales
+
+  try {
+    const { data: tenantQuery } = (await graphQLServer.query(
+      createBindingsQuery,
+      TENANT_GRAPHQL_APP
+    )) as TenantQuery
+
+    const {
+      tenantInfo: { bindings },
+    } = tenantQuery
+
+    locales = extractLocales(bindings)
+  } catch (error) {
+    logger.error({
+      message: 'Error getting store locales',
+      date: new Date().toString(),
+      error,
+    })
+  }
+
+  if (!locales) {
     return
   }
 
@@ -79,86 +150,63 @@ export async function generateProductsFeed(ctx: Context) {
     productIdsArrays.push(extractAllProductIds(data))
   }
 
-  const productQueriesPromises: any[] = []
+  for await (const locale of locales) {
+    const productQueriesPromises: any[] = []
 
-  for (const idsArray of productIdsArrays) {
-    const query = createProductsQuery(idsArray)
+    for (const idsArray of productIdsArrays) {
+      const query = createProductsQuery(idsArray)
 
-    productQueriesPromises.push(searchGQL.query(query))
-  }
+      productQueriesPromises.push(
+        graphQLServer.query(query, SEARCH_GRAPHQL_APP, locale)
+      )
+    }
 
-  let productQueries
+    try {
+      let products: ProductInfo[] = []
 
-  try {
-    productQueries = await Promise.all(productQueriesPromises)
-  } catch (error) {
-    logger.error({
-      message: 'Error resolving product queries.',
-      date: new Date().toString(),
-      error,
-    })
-  }
+      for await (const productQuery of productQueriesPromises) {
+        const { data } = (await productQuery) as ProductsByIdentifierQuery
 
-  if (!productQueries) {
-    return
-  }
+        if (data) {
+          const { productsByIdentifier } = data
 
-  let products: QueryProduct[] = []
+          products = products.concat(productsByIdentifier)
+        }
 
-  for (const productQuery of productQueries) {
-    if (productQuery.data) {
-      const { data }: { data?: any } = productQuery
-      const {
-        productsByIdentifier,
-      }: { productsByIdentifier: QueryProduct } = data
+        pacer(200)
+      }
 
-      products = products.concat(productsByIdentifier)
+      const productFeed = products.map(transformProductToClerk)
+
+      await feedManager.saveProductFeed({ productFeed, locale })
+
+      const finishedAt = new Date().toString()
+
+      const feedStatusUpdated = {
+        ...feedStatus,
+        ...{ finishedAt, entries: productFeed.length },
+      }
+
+      await feedManager.updateFeedStatus(feedStatusUpdated)
+
+      logger.info({
+        message: 'Products feed generated successfully',
+        date: finishedAt,
+      })
+    } catch (error) {
+      const finishedAt = new Date().toString()
+
+      const feedStatusUpdated = {
+        ...feedStatus,
+        ...{ finishedAt, error: true },
+      }
+
+      await feedManager.updateFeedStatus(feedStatusUpdated)
+
+      logger.error({
+        message: 'Error generating products feed',
+        date: finishedAt,
+      })
     }
   }
-
-  const feedProducts = products.map(transformProductToClerk)
-
-  // eslint-disable-next-line no-console
-  console.log(
-    'FeedProducts',
-    feedProducts.length ? feedProducts.length : 'Nooo'
-  )
-  // feedManager.saveProductFeed({
-  //   productFeed: feedProducts,
-  //   locale: 'es_ES',
-  // })
-}
-
-function createProductsQuery(productIds: string[]) {
-  return `query {
-    productsByIdentifier (
-      field: id
-      values: [${productIds}]
-    ) {
-      productId
-      productName
-      description
-      priceRange {
-        sellingPrice {
-          highPrice
-          lowPrice
-        }
-        listPrice {
-          highPrice
-          lowPrice
-        }
-      }
-      items {
-        images {
-          imageUrl
-        }
-      }
-      link
-      categoryTree {
-        id
-      }
-      brand
-      releaseDate
-    }
-  }`
 }

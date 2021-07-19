@@ -17,7 +17,7 @@ interface ProductAndSkuIds {
   }
 }
 
-interface QueryProduct {
+interface ProductInfo {
   productId: string
   productName: string
   description: string
@@ -74,4 +74,24 @@ interface Item {
   id: string
   quantity: number
   sellingPrice: number
+}
+
+interface TenantQuery {
+  data: {
+    tenantInfo: TenantInfo
+  }
+}
+interface TenantInfo {
+  bindings: Binding[]
+}
+
+interface Binding {
+  defaultLocale: string
+  targetProduct: string
+}
+
+interface ProductsByIdentifierQuery {
+  data: {
+    productsByIdentifier: ProductInfo[]
+  }
 }
