@@ -129,7 +129,7 @@ export function extractLocales(bindings: Binding[]) {
   }, [])
 }
 
-export function transformProductToClerk(product: QueryProduct): ClerkProduct {
+export function transformProductToClerk(product: ProductInfo): ClerkProduct {
   const dateString = product.releaseDate ?? new Date()
   const date = new Date(dateString).getTime()
 
