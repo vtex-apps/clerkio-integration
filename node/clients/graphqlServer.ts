@@ -1,6 +1,5 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
 import { AppClient, GraphQLClient } from '@vtex/api'
-import type { GraphQLResponse } from '@vtex/api/lib/service/worker/runtime/graphql/typings'
 
 export default class GraphQLServer extends AppClient {
   protected graphql: GraphQLClient
@@ -10,11 +9,11 @@ export default class GraphQLServer extends AppClient {
     this.graphql = new GraphQLClient(this.http)
   }
 
-  public query = async (
+  public query = async <T>(
     query: string,
     provider: string,
     locale?: string
-  ): Promise<GraphQLResponse> => {
+  ): Promise<T> => {
     return this.graphql
       .query(
         {
