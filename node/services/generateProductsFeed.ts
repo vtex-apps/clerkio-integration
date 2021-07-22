@@ -13,11 +13,7 @@ const createProductsQuery = (
   productIds: string[],
   salesChannel: string
 ) => `query {
-    productsByIdentifier (
-      field: id
-      values: [${productIds}]
-      salesChannel: ${salesChannel}
-    ) {
+    productsByIdentifier(field: id, values: [${productIds}], salesChannel: "${salesChannel}") {
       productId
       productName
       description
@@ -48,6 +44,7 @@ const createProductsQuery = (
 const createBindingsQuery = `query {
     tenantInfo {
       bindings {
+        id
         defaultLocale
         targetProduct
         extraContext
@@ -90,9 +87,6 @@ export async function generateProductsFeed(ctx: Context) {
     } = tenantQuery
 
     storeBindings = formatBindings(bindings)
-
-    // eslint-disable-next-line no-console
-    console.log('Bindings', storeBindings)
   } catch (error) {
     logger.error({
       message: 'Error getting store locales',
@@ -158,9 +152,12 @@ export async function generateProductsFeed(ctx: Context) {
     productIdsArrays.push(extractAllProductIds(data))
   }
 
+  const feedStatusUpdated: FeedStatus = { ...feedStatus }
+  const entries: ProductFeedEntries[] = []
+
   for await (const binding of storeBindings) {
     const productQueriesPromises: Array<Promise<ProductsByIdentifierQuery>> = []
-    const { id, locale, salesChannel } = binding
+    const { id: bindingId, locale, salesChannel } = binding
 
     for (const idsArray of productIdsArrays) {
       const query = createProductsQuery(idsArray, salesChannel)
@@ -170,14 +167,11 @@ export async function generateProductsFeed(ctx: Context) {
       )
     }
 
-    const feedStatusUpdated: FeedStatus = { ...feedStatus }
-    const entries: ProductFeedEntries[] = []
-
     try {
       let products: ProductInfo[] = []
 
       for await (const productQuery of productQueriesPromises) {
-        const { data } = productQuery
+        const { data } = await productQuery
 
         if (data) {
           const { productsByIdentifier } = data
@@ -185,39 +179,44 @@ export async function generateProductsFeed(ctx: Context) {
           products = products.concat(productsByIdentifier)
         }
 
-        await pacer(200)
+        await pacer(500)
       }
 
       const productFeed = products.map(transformProductToClerk)
 
-      await feedManager.saveProductFeed({ productFeed, id })
+      await feedManager.saveProductFeed({ productFeed, bindingId })
 
       entries.push({
-        binding: id,
+        binding: bindingId,
         entries: productFeed.length,
+      })
+
+      logger.info({
+        message: `Products feed generated for bonding with id ${bindingId}`,
+        date: feedStatusUpdated.finishedAt,
       })
     } catch (error) {
       const finishedAt = new Date().toString()
 
-      entries.push({ binding: id, entries: 0 })
+      entries.push({ binding: bindingId, entries: 0 })
       feedStatusUpdated.error = true
 
       await feedManager.updateFeedStatus(feedStatusUpdated)
 
       logger.error({
-        message: `Error generating products feed for binding with id ${id}`,
+        message: `Error generating products feed for binding with id ${bindingId}`,
         date: finishedAt,
       })
     }
-
-    feedStatusUpdated.entries = entries
-    feedStatusUpdated.finishedAt = new Date().toString()
-
-    await feedManager.updateFeedStatus(feedStatusUpdated)
-
-    logger.info({
-      message: 'Products feed generated',
-      date: feedStatusUpdated.finishedAt,
-    })
   }
+
+  feedStatusUpdated.entries = entries
+  feedStatusUpdated.finishedAt = new Date().toString()
+
+  await feedManager.updateFeedStatus(feedStatusUpdated)
+
+  logger.info({
+    message: 'Products feed generated',
+    date: feedStatusUpdated.finishedAt,
+  })
 }

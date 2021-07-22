@@ -10,21 +10,21 @@ const FEED_STATUS = 'status'
 export class FeedManager extends VBase {
   public saveProductFeed = ({
     productFeed,
-    id,
+    bindingId,
   }: {
-    id: string
+    bindingId: string
     productFeed: ClerkProduct[]
   }) =>
     this.saveJSON<FeedStructure<ClerkProduct>>(
       BUCKET,
-      this.productPath(id),
+      this.productPath(bindingId),
       this.feedStructure<ClerkProduct>(productFeed)
     )
 
-  public getProductFeed = (id: string) =>
+  public getProductFeed = (bindingId: string) =>
     this.getJSON<FeedStructure<ClerkProduct> | null>(
       BUCKET,
-      this.productPath(id),
+      this.productPath(bindingId),
       true
     )
 
