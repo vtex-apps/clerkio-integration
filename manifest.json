@@ -11,7 +11,9 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": ["*"]
+    "availableCountries": [
+      "*"
+    ]
   },
   "builders": {
     "messages": "1.x",

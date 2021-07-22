@@ -10,21 +10,21 @@ const FEED_STATUS = 'status'
 export class FeedManager extends VBase {
   public saveProductFeed = ({
     productFeed,
-    locale,
+    id,
   }: {
-    locale: string
+    id: string
     productFeed: ClerkProduct[]
   }) =>
     this.saveJSON<FeedStructure<ClerkProduct>>(
       BUCKET,
-      this.productPath(locale),
+      this.productPath(id),
       this.feedStructure<ClerkProduct>(productFeed)
     )
 
-  public getProductFeed = (locale: string) =>
+  public getProductFeed = (id: string) =>
     this.getJSON<FeedStructure<ClerkProduct> | null>(
       BUCKET,
-      this.productPath(locale),
+      this.productPath(id),
       true
     )
 
@@ -57,29 +57,33 @@ export class FeedManager extends VBase {
     this.getJSON<FeedStructure<ClerkOrder> | null>(BUCKET, ORDER_PATH, true)
 
   public updateLastIntegration = async ({
-    locale,
+    bindingId,
     products,
     orderIntegratedAt,
     categories,
   }: IntegrationInfoInput) =>
-    this.saveJSON<IntegrationInfo>(BUCKET, this.lastIntegrationPath(locale), {
-      products,
-      orderIntegratedAt,
-      categories,
-      integratedAt: new Date().getTime(),
-    })
+    this.saveJSON<IntegrationInfo>(
+      BUCKET,
+      this.lastIntegrationPath(bindingId),
+      {
+        products,
+        orderIntegratedAt,
+        categories,
+        integratedAt: new Date().getTime(),
+      }
+    )
 
-  public getLastIntegration = (locale: string) =>
+  public getLastIntegration = (bindingId: string) =>
     this.getJSON<IntegrationInfo | null>(
       BUCKET,
-      this.lastIntegrationPath(locale),
+      this.lastIntegrationPath(bindingId),
       true
     )
 
   public ordersIntegratedAt = async (
-    locale: string
+    bindingId: string
   ): Promise<number | undefined> => {
-    const lastIntegration = await this.getLastIntegration(locale)
+    const lastIntegration = await this.getLastIntegration(bindingId)
 
     return lastIntegration?.orderIntegratedAt
   }
@@ -105,9 +109,11 @@ export class FeedManager extends VBase {
     )
   }
 
-  private productPath = (locale: string): string => `${PRODUCT_PATH}-${locale}`
-  private lastIntegrationPath = (locale: string): string =>
-    `${LAST_INTEGRATION}-${locale}`
+  private productPath = (bindingId: string): string =>
+    `${PRODUCT_PATH}-${bindingId}`
+
+  private lastIntegrationPath = (bindingId: string): string =>
+    `${LAST_INTEGRATION}-${bindingId}`
 
   private statusPath = (feedType: FeedType): string =>
     `${FEED_STATUS}-${feedType}`
