@@ -100,6 +100,7 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
     id: orderDetails.orderId,
     time: new Date(orderDetails.creationDate).getTime(),
     email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
+    salesChannel: orderDetails.salesChannel,
     products: orderDetails.items.map(item => {
       return {
         id: item.id,
@@ -131,6 +132,18 @@ export function formatBindings(bindings: Binding[]) {
 
     return result
   }, [])
+}
+
+export function getBindingSalesChannel(
+  bindings: Binding[],
+  bindingId: string
+): any {
+  const [currentBinding] = bindings.filter(binding => binding.id === bindingId)
+  const {
+    extraContext: { portal },
+  } = currentBinding
+
+  return String(portal?.salesChannel)
 }
 
 export function transformProductToClerk(product: ProductInfo): ClerkProduct {
@@ -196,3 +209,17 @@ export function pacer(callsPerMinute: number) {
     }, ONE_MINUTE / callsPerMinute)
   })
 }
+
+export const bindingsQuery = `query {
+  tenantInfo {
+    bindings {
+      id
+      defaultLocale
+      targetProduct
+      extraContext
+    }
+  }
+}`
+
+export const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
+export const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'

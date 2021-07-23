@@ -66,6 +66,7 @@ export class FeedManager extends VBase {
       BUCKET,
       this.lastIntegrationPath(bindingId),
       {
+        bindingId,
         products,
         orderIntegratedAt,
         categories,

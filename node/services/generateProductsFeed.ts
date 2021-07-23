@@ -1,13 +1,13 @@
 import {
+  bindingsQuery,
   extractAllProductIds,
   formatBindings,
   iterationLimits,
   transformProductToClerk,
   pacer,
+  SEARCH_GRAPHQL_APP,
+  TENANT_GRAPHQL_APP,
 } from '../utils'
-
-const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
-const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'
 
 const createProductsQuery = (
   productIds: string[],
@@ -41,17 +41,6 @@ const createProductsQuery = (
     }
   }`
 
-const createBindingsQuery = `query {
-    tenantInfo {
-      bindings {
-        id
-        defaultLocale
-        targetProduct
-        extraContext
-      }
-    }
-  }`
-
 export async function generateProductsFeed(ctx: Context) {
   const {
     clients: { catalog, feedManager, graphQLServer },
@@ -78,7 +67,7 @@ export async function generateProductsFeed(ctx: Context) {
 
   try {
     const { data: tenantQuery } = await graphQLServer.query<TenantQuery>(
-      createBindingsQuery,
+      bindingsQuery,
       TENANT_GRAPHQL_APP
     )
 
