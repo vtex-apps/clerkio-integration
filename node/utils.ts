@@ -100,6 +100,7 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
     id: orderDetails.orderId,
     time: new Date(orderDetails.creationDate).getTime(),
     email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
+    salesChannel: orderDetails.salesChannel,
     products: orderDetails.items.map(item => {
       return {
         id: item.id,
@@ -112,21 +113,37 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
 
 const VTEX_STORE_FRONT = 'vtex-storefront'
 
-export function extractLocales(bindings: Binding[]) {
-  return bindings.reduce((locales: string[], binding) => {
-    const { defaultLocale, targetProduct } = binding
+export function formatBindings(bindings: Binding[]) {
+  return bindings.reduce<BindingInfo[]>((result, binding) => {
+    const { id, targetProduct, defaultLocale, extraContext } = binding
 
     if (
       targetProduct === VTEX_STORE_FRONT &&
-      !locales.includes(defaultLocale)
+      extraContext.portal?.salesChannel
     ) {
-      locales.push(defaultLocale)
+      result.push({
+        id,
+        locale: defaultLocale,
+        salesChannel: extraContext.portal.salesChannel,
+      })
 
-      return locales
+      return result
     }
 
-    return locales
+    return result
   }, [])
+}
+
+export function getBindingSalesChannel(
+  bindings: Binding[],
+  bindingId: string
+): any {
+  const [currentBinding] = bindings.filter(binding => binding.id === bindingId)
+  const {
+    extraContext: { portal },
+  } = currentBinding
+
+  return String(portal?.salesChannel)
 }
 
 export function transformProductToClerk(product: ProductInfo): ClerkProduct {
@@ -209,3 +226,17 @@ export function feedInProgress(feedStatus: FeedStatus): boolean {
 
   return false
 }
+
+export const bindingsQuery = `query {
+  tenantInfo {
+    bindings {
+      id
+      defaultLocale
+      targetProduct
+      extraContext
+    }
+  }
+}`
+
+export const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
+export const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'

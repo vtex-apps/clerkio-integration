@@ -86,8 +86,14 @@ interface TenantInfo {
 }
 
 interface Binding {
+  id: string
   defaultLocale: string
   targetProduct: string
+  extraContext: {
+    portal?: {
+      salesChannel?: string
+    }
+  }
 }
 
 interface ProductsByIdentifierQuery {
