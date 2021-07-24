@@ -1,74 +1,46 @@
-import {
-  getBindingSalesChannel,
-  bindingsQuery,
-  TENANT_GRAPHQL_APP,
-} from '../utils'
-
 export async function getFeed(ctx: Context) {
   const {
-    clients: { feedManager, graphQLServer },
-    vtex: {
-      logger,
-      route: { params },
+    clients: { feedManager },
+    state: {
+      bindingIntegrationInfo: { bindingId, salesChannel, lastIntegration },
     },
+    vtex: { logger },
   } = ctx
 
   try {
-    const bindingId = params.bindingId as string
-
-    const { data: tenantQuery } = await graphQLServer.query<TenantQuery>(
-      bindingsQuery,
-      TENANT_GRAPHQL_APP
-    )
-
-    const {
-      tenantInfo: { bindings },
-    } = tenantQuery
-
-    const salesChannel = getBindingSalesChannel(bindings, bindingId)
-
-    const lastIntegration = await feedManager.getLastIntegration(bindingId)
-
     const orderIntegratedAt = lastIntegration?.orderIntegratedAt
 
     let products: ClerkProduct[] = []
     let categories: ClerkCategory[] = []
     let orders: ClerkOrder[] = []
 
-    const clerkFeed: ClerkFeed = { products, categories }
-    const promises: Array<Promise<any>> = []
+    const promises: Array<Promise<any>> = [
+      feedManager.getProductFeed(bindingId),
+      feedManager.getCategoryFeed(),
+    ]
 
-    promises.push(feedManager.getProductFeed(bindingId))
-    promises.push(feedManager.getCategoryFeed())
+    const [productsRes, categoriesRes] = await Promise.all(promises)
 
-    if (!lastIntegration || !orderIntegratedAt) {
-      promises.push(feedManager.getOrderFeed())
-
-      const [productsRes, categoriesRes, ordersRes] = await Promise.all(
-        promises
-      )
-
-      products = [...productsRes.data]
-      categories = [...categoriesRes.data]
-      orders = [...ordersRes.data]
-      orders = orders.filter(order => order.salesChannel === salesChannel)
-    } else {
-      const [productsRes, categoriesRes] = await Promise.all(promises)
-
+    if (productsRes && categoriesRes) {
       products = [...productsRes.data]
       categories = [...categoriesRes.data]
     }
 
-    clerkFeed.products = products
-    clerkFeed.categories = categories
+    const clerkFeed: ClerkFeed = { products, categories }
 
-    if (orders.length) {
-      clerkFeed.orders = orders
+    if (!lastIntegration || !orderIntegratedAt) {
+      const ordersRes = await feedManager.getOrderFeed()
+
+      if (ordersRes) {
+        orders = [...ordersRes.data]
+        orders = orders.filter(order => order.salesChannel === salesChannel)
+        clerkFeed.orders = orders
+      }
     }
 
     ctx.body = clerkFeed
 
-    const lastIntegrationUpdated = {
+    const lastIntegrationUpdated: IntegrationInfoInput = {
       bindingId,
       orderIntegratedAt: orderIntegratedAt ?? new Date().getTime(),
       products: products.length,

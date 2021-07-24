@@ -15,8 +15,9 @@ import {
   createFeedOrders,
   sendResponse,
   feedStatus,
+  getBindingIntegrationInfo,
+  parseAppSetings,
 } from './middlewares'
-import { parseAppSetings } from './middlewares/parseAppSettings'
 
 const TIMEOUT_MS = 800
 const LONG_TIMEOUT_MS = 1200
@@ -39,6 +40,11 @@ declare global {
   type Context = ServiceContext<Clients, State>
 
   interface State extends RecorderState {
+    bindingIntegrationInfo: {
+      bindingId: string
+      salesChannel: string
+      lastIntegration: IntegrationInfo | null
+    }
     appConfig: AppConfig
   }
 }
@@ -56,7 +62,7 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, parseAppSetings, createFeedOrders, sendResponse],
     }),
     feed: method({
-      GET: [errorHandler, parseAppSetings, getFeed],
+      GET: [errorHandler, parseAppSetings, getBindingIntegrationInfo, getFeed],
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],

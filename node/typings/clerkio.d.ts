@@ -88,7 +88,6 @@ interface FeedStructure<FeedDataType> {
 type OrderIntegrationControl = Record<string, number>
 
 interface IntegrationInfo {
-  bindingId: string
   /**
    * The time when orders were integrated as a Unix Timestamp
    *
