@@ -159,19 +159,23 @@ export async function generateProductsFeed(ctx: Context) {
     const productQueriesPromises: Array<Promise<ProductsByIdentifierQuery>> = []
     const { id: bindingId, locale, salesChannel } = binding
 
-    for (const idsArray of productIdsArrays) {
+    for await (const idsArray of productIdsArrays) {
       const query = createProductsQuery(idsArray, salesChannel)
 
       productQueriesPromises.push(
         graphQLServer.query(query, SEARCH_GRAPHQL_APP, locale)
       )
+
+      await pacer(1000)
     }
 
     try {
+      const productQueries = await Promise.all(productQueriesPromises)
+
       let products: ProductInfo[] = []
 
-      for await (const productQuery of productQueriesPromises) {
-        const { data } = await productQuery
+      for await (const productQuery of productQueries) {
+        const { data } = productQuery
 
         if (data) {
           const { productsByIdentifier } = data
@@ -179,7 +183,7 @@ export async function generateProductsFeed(ctx: Context) {
           products = products.concat(productsByIdentifier)
         }
 
-        await pacer(500)
+        await pacer(1000)
       }
 
       const productFeed = products.map(transformProductToClerk)
