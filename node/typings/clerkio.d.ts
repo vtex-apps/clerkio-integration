@@ -133,5 +133,5 @@ interface IntegrationInfoInput {
    * @memberOf IntegrationInfo
    */
   categories: number
-  locale: string
+  bindingId: string
 }

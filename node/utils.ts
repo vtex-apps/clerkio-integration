@@ -112,20 +112,24 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
 
 const VTEX_STORE_FRONT = 'vtex-storefront'
 
-export function extractLocales(bindings: Binding[]) {
-  return bindings.reduce((locales: string[], binding) => {
-    const { defaultLocale, targetProduct } = binding
+export function formatBindings(bindings: Binding[]) {
+  return bindings.reduce<BindingInfo[]>((result, binding) => {
+    const { id, targetProduct, defaultLocale, extraContext } = binding
 
     if (
       targetProduct === VTEX_STORE_FRONT &&
-      !locales.includes(defaultLocale)
+      extraContext.portal?.salesChannel
     ) {
-      locales.push(defaultLocale)
+      result.push({
+        id,
+        locale: defaultLocale,
+        salesChannel: extraContext.portal.salesChannel,
+      })
 
-      return locales
+      return result
     }
 
-    return locales
+    return result
   }, [])
 }
 

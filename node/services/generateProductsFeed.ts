@@ -1,6 +1,6 @@
 import {
   extractAllProductIds,
-  extractLocales,
+  formatBindings,
   iterationLimits,
   transformProductToClerk,
   pacer,
@@ -9,11 +9,11 @@ import {
 const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
 const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'
 
-const createProductsQuery = (productIds: string[]) => `query {
-    productsByIdentifier (
-      field: id
-      values: [${productIds}]
-    ) {
+const createProductsQuery = (
+  productIds: string[],
+  salesChannel: string
+) => `query {
+    productsByIdentifier(field: id, values: [${productIds}], salesChannel: "${salesChannel}") {
       productId
       productName
       description
@@ -44,8 +44,10 @@ const createProductsQuery = (productIds: string[]) => `query {
 const createBindingsQuery = `query {
     tenantInfo {
       bindings {
+        id
         defaultLocale
         targetProduct
+        extraContext
       }
     }
   }`
@@ -72,19 +74,19 @@ export async function generateProductsFeed(ctx: Context) {
     return
   }
 
-  let locales
+  let storeBindings
 
   try {
-    const { data: tenantQuery } = (await graphQLServer.query(
+    const { data: tenantQuery } = await graphQLServer.query<TenantQuery>(
       createBindingsQuery,
       TENANT_GRAPHQL_APP
-    )) as TenantQuery
+    )
 
     const {
       tenantInfo: { bindings },
     } = tenantQuery
 
-    locales = extractLocales(bindings)
+    storeBindings = formatBindings(bindings)
   } catch (error) {
     logger.error({
       message: 'Error getting store locales',
@@ -93,7 +95,7 @@ export async function generateProductsFeed(ctx: Context) {
     })
   }
 
-  if (!locales) {
+  if (!storeBindings) {
     return
   }
 
@@ -150,22 +152,30 @@ export async function generateProductsFeed(ctx: Context) {
     productIdsArrays.push(extractAllProductIds(data))
   }
 
-  for await (const locale of locales) {
-    const productQueriesPromises: any[] = []
+  const feedStatusUpdated: FeedStatus = { ...feedStatus }
+  const entries: ProductFeedEntries[] = []
 
-    for (const idsArray of productIdsArrays) {
-      const query = createProductsQuery(idsArray)
+  for await (const binding of storeBindings) {
+    const productQueriesPromises: Array<Promise<ProductsByIdentifierQuery>> = []
+    const { id: bindingId, locale, salesChannel } = binding
+
+    for await (const idsArray of productIdsArrays) {
+      const query = createProductsQuery(idsArray, salesChannel)
 
       productQueriesPromises.push(
         graphQLServer.query(query, SEARCH_GRAPHQL_APP, locale)
       )
+
+      await pacer(1000)
     }
 
     try {
+      const productQueries = await Promise.all(productQueriesPromises)
+
       let products: ProductInfo[] = []
 
-      for await (const productQuery of productQueriesPromises) {
-        const { data } = (await productQuery) as ProductsByIdentifierQuery
+      for await (const productQuery of productQueries) {
+        const { data } = productQuery
 
         if (data) {
           const { productsByIdentifier } = data
@@ -173,40 +183,44 @@ export async function generateProductsFeed(ctx: Context) {
           products = products.concat(productsByIdentifier)
         }
 
-        pacer(200)
+        await pacer(1000)
       }
 
       const productFeed = products.map(transformProductToClerk)
 
-      await feedManager.saveProductFeed({ productFeed, locale })
+      await feedManager.saveProductFeed({ productFeed, bindingId })
 
-      const finishedAt = new Date().toString()
-
-      const feedStatusUpdated = {
-        ...feedStatus,
-        ...{ finishedAt, entries: productFeed.length },
-      }
-
-      await feedManager.updateFeedStatus(feedStatusUpdated)
+      entries.push({
+        binding: bindingId,
+        entries: productFeed.length,
+      })
 
       logger.info({
-        message: 'Products feed generated successfully',
-        date: finishedAt,
+        message: `Products feed generated for bonding with id ${bindingId}`,
+        date: feedStatusUpdated.finishedAt,
       })
     } catch (error) {
       const finishedAt = new Date().toString()
 
-      const feedStatusUpdated = {
-        ...feedStatus,
-        ...{ finishedAt, error: true },
-      }
+      entries.push({ binding: bindingId, entries: 0 })
+      feedStatusUpdated.error = true
 
       await feedManager.updateFeedStatus(feedStatusUpdated)
 
       logger.error({
-        message: 'Error generating products feed',
+        message: `Error generating products feed for binding with id ${bindingId}`,
         date: finishedAt,
       })
     }
   }
+
+  feedStatusUpdated.entries = entries
+  feedStatusUpdated.finishedAt = new Date().toString()
+
+  await feedManager.updateFeedStatus(feedStatusUpdated)
+
+  logger.info({
+    message: 'Products feed generated',
+    date: feedStatusUpdated.finishedAt,
+  })
 }
