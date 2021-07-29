@@ -14,8 +14,8 @@ export default class GraphQLServer extends AppClient {
     provider: string,
     locale?: string
   ): Promise<T> => {
-    return this.graphql
-      .query(
+    try {
+      return (await this.graphql.query(
         {
           extensions: {
             persistedQuery: {
@@ -32,7 +32,9 @@ export default class GraphQLServer extends AppClient {
           },
           url: '/graphql',
         }
-      )
-      .catch(err => err)
+      )) as Promise<T>
+    } catch (error) {
+      return error
+    }
   }
 }
