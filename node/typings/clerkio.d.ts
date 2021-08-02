@@ -4,7 +4,7 @@ interface ClerkFeed {
   orders?: ClerkOrder[]
   customers?: ClerkCustomer[]
   pages?: ClerkPage[]
-  config: {
+  config?: {
     /**
      * Optional. A timestamp indicating when the feed was last updated. This is used for product versioning if real time product updates are pushed via the API.
      *
@@ -25,11 +25,12 @@ interface ClerkProduct {
   id: string
   name: string
   description: string
-  price: string
-  list_price?: string
+  price: number
+  list_price?: number
   image: string
   url: string
-  categories: string[]
+  categories: number[]
+  brand?: string
   /**
    * Unix timestamp for when the product was created.
    *
@@ -44,6 +45,7 @@ interface ClerkCategory {
   name: string
   url: string
   subcategories: string[]
+  description?: string
 }
 
 interface ClerkOrder {
@@ -61,6 +63,7 @@ interface ClerkOrder {
    */
   time: number
   email: string
+  salesChannel?: string
 }
 
 interface ClerkCustomer {
@@ -131,5 +134,5 @@ interface IntegrationInfoInput {
    * @memberOf IntegrationInfo
    */
   categories: number
-  locale: string
+  bindingId: string
 }

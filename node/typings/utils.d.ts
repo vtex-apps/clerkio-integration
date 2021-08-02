@@ -16,10 +16,20 @@ interface ListOrderParams {
 
 type FeedType = 'order' | 'product' | 'category'
 
+interface ProductFeedEntries {
+  binding?: string
+  entries?: number
+}
 interface FeedStatus {
   startedAt?: string
   type: FeedType
   finishedAt?: string
-  entries?: number
+  entries?: number | ProductFeedEntries[]
   error?: boolean
+}
+
+interface BindingInfo {
+  id: string
+  locale: string
+  salesChannel: string
 }

@@ -1,4 +1,5 @@
 import { generateOrderFeed } from '../services/generateOrderFeed'
+import { feedInProgress } from '../utils'
 
 export async function createFeedOrders(
   ctx: Context,
@@ -10,7 +11,7 @@ export async function createFeedOrders(
 
   const feedStatus = await feedManager.getFeedStatus('order')
 
-  if (feedStatus && !feedStatus.finishedAt) {
+  if (feedStatus && feedInProgress(feedStatus)) {
     ctx.status = 200
     ctx.body = {
       message: 'Feed order already in progress',

@@ -11,7 +11,9 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": ["*"]
+    "availableCountries": [
+      "*"
+    ]
   },
   "builders": {
     "messages": "1.x",
@@ -23,10 +25,25 @@
   },
   "dependencies": {
     "vtex.pixel-interfaces": "1.x",
+    "vtex.catalog-graphql": "1.x",
+    "vtex.graphql-server": "1.x",
     "vtex.render-runtime": "8.x",
     "vtex.store-resources": "0.x"
   },
   "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "vtex.catalog-graphql:resolve-graphql"
+    },
+    {
+      "name": "vtex.graphql-server:resolve-graphql"
+    },
     {
       "name": "vbase-read-write"
     },

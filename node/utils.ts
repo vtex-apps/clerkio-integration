@@ -1,39 +1,15 @@
 import { UserInputError } from '@vtex/api'
 
-export function prepareFeedCategories(
-  arr: CategoryTreeItem[],
-  hostname: string
-) {
-  return arr.reduce(
-    (result: ClerkCategory[], currentItem: CategoryTreeItem) => {
-      const { id, name, url } = currentItem
-      const category: ClerkCategory = {
-        id: String(id),
-        name,
-        subcategories: [],
-        url: url.replace('portal.vtexcommercestable.com.br', hostname),
-      }
-
-      result.push(category)
-
-      if (currentItem.hasChildren) {
-        result[result.length - 1].subcategories = getAllSubcategoriesIds(
-          currentItem.children
-        )
-
-        result = result.concat(
-          prepareFeedCategories(currentItem.children, hostname)
-        )
-      }
-
-      return result
-    },
-    []
-  )
+export function getAllSubcategoriesIds(arr: CategoryTreeItem[]) {
+  return arr.map(item => String(item.id))
 }
 
-function getAllSubcategoriesIds(arr: CategoryTreeItem[]) {
-  return arr.map(item => String(item.id))
+export function extractAllProductIds(products: ProductAndSkuIds['data']) {
+  return Object.keys(products)
+}
+
+export function iterationLimits(step: number) {
+  return [50 * step + 1, 50 * step + 50]
 }
 
 export function validateAppSettings(appConfig: AppConfig): boolean | void {
@@ -124,6 +100,7 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
     id: orderDetails.orderId,
     time: new Date(orderDetails.creationDate).getTime(),
     email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
+    salesChannel: orderDetails.salesChannel,
     products: orderDetails.items.map(item => {
       return {
         id: item.id,
@@ -132,6 +109,95 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
       }
     }),
   }
+}
+
+const VTEX_STORE_FRONT = 'vtex-storefront'
+
+export function formatBindings(bindings: Binding[]) {
+  return bindings.reduce<BindingInfo[]>((result, binding) => {
+    const { id, targetProduct, defaultLocale, extraContext } = binding
+
+    if (
+      targetProduct === VTEX_STORE_FRONT &&
+      extraContext.portal?.salesChannel
+    ) {
+      result.push({
+        id,
+        locale: defaultLocale,
+        salesChannel: extraContext.portal.salesChannel,
+      })
+
+      return result
+    }
+
+    return result
+  }, [])
+}
+
+export function getBindingSalesChannel(
+  bindings: Binding[],
+  bindingId: string
+): any {
+  const [currentBinding] = bindings.filter(binding => binding.id === bindingId)
+  const {
+    extraContext: { portal },
+  } = currentBinding
+
+  return String(portal?.salesChannel)
+}
+
+export function transformProductToClerk(product: ProductInfo): ClerkProduct {
+  const dateString = product.releaseDate ?? new Date()
+  const date = new Date(dateString).getTime()
+
+  return {
+    id: product.productId,
+    name: product.productName,
+    description: product.description,
+    price:
+      product.priceRange.sellingPrice.highPrice ??
+      product.priceRange.sellingPrice.lowPrice,
+    list_price:
+      product.priceRange.listPrice.highPrice ??
+      product.priceRange.listPrice.lowPrice,
+    image: product.items[0].images[0].imageUrl,
+    url: product.link,
+    categories: product.categoryTree.map(category => category.id),
+    brand: product.brand,
+    created_at: date,
+  }
+}
+
+export function transformCategoriesToClerk(
+  categoryTree: CategoryTreeItem[],
+  hostname: string
+) {
+  return categoryTree.reduce(
+    (result: ClerkCategory[], currentItem: CategoryTreeItem) => {
+      const { id, name, url } = currentItem
+      const category: ClerkCategory = {
+        id: String(id),
+        name,
+        subcategories: [],
+        url: url.replace('portal.vtexcommercestable.com.br', hostname),
+      }
+
+      result.push(category)
+
+      if (currentItem.hasChildren) {
+        result[result.length - 1].subcategories = getAllSubcategoriesIds(
+          currentItem.children
+        )
+
+        result = result.concat(
+          transformCategoriesToClerk(currentItem.children, hostname)
+        )
+      }
+
+      return result
+    },
+    []
+  )
 }
 
 const ONE_MINUTE = 60 * 1000
@@ -143,3 +209,34 @@ export function pacer(callsPerMinute: number) {
     }, ONE_MINUTE / callsPerMinute)
   })
 }
+
+const TWO_HOURS = 2 * 60 * 60 * 1000
+
+export function feedInProgress(feedStatus: FeedStatus): boolean {
+  const startDate = feedStatus.startedAt as string
+  const finishDate = feedStatus.finishedAt as string
+
+  const startedAt = new Date(startDate).getTime()
+  const finishedAt = new Date(finishDate).getTime()
+  const currentTime = new Date().getTime()
+
+  if (!finishedAt && currentTime - startedAt < TWO_HOURS) {
+    return true
+  }
+
+  return false
+}
+
+export const bindingsQuery = `query {
+  tenantInfo {
+    bindings {
+      id
+      defaultLocale
+      targetProduct
+      extraContext
+    }
+  }
+}`
+
+export const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
+export const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'
