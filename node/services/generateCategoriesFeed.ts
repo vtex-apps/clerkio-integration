@@ -23,10 +23,41 @@ export async function generateCategoriesFeed(ctx: Context) {
     return
   }
 
-  const CATEGORY_LEVELS = 6
-  const categoryTree = await catalog.getCategoryTree(CATEGORY_LEVELS)
+  try {
+    const CATEGORY_LEVELS = 6
+    const categoryTree = await catalog.getCategoryTree(CATEGORY_LEVELS)
 
-  const categoryFeed = transformCategoriesToClerk(categoryTree, hostname)
+    const categoryFeed = transformCategoriesToClerk(categoryTree, hostname)
 
-  await feedManager.saveCategoryFeed({ categoryFeed })
+    await feedManager.saveCategoryFeed({ categoryFeed })
+
+    const finishedAt = new Date().toString()
+
+    const feedStatusUpdated = {
+      ...feedStatus,
+      ...{ finishedAt, entries: categoryFeed.length },
+    }
+
+    await feedManager.updateFeedStatus(feedStatusUpdated)
+
+    logger.info({
+      message: 'Categories feed generated successfully',
+      date: finishedAt,
+    })
+  } catch (error) {
+    const finishedAt = new Date().toString()
+
+    const feedStatusUpdated = {
+      ...feedStatus,
+      ...{ finishedAt, error: true },
+    }
+
+    await feedManager.updateFeedStatus(feedStatusUpdated)
+
+    logger.error({
+      message: 'Error generating categories feed',
+      date: finishedAt,
+      error,
+    })
+  }
 }
