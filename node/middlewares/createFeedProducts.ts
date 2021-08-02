@@ -1,4 +1,5 @@
 import { generateProductsFeed } from '../services/generateProductsFeed'
+import { feedInProgress } from '../utils'
 
 export async function createFeedProducts(
   ctx: Context,
@@ -10,7 +11,7 @@ export async function createFeedProducts(
 
   const feedStatus = await feedManager.getFeedStatus('product')
 
-  if (feedStatus && !feedStatus.finishedAt) {
+  if (feedStatus && feedInProgress(feedStatus)) {
     ctx.status = 200
     ctx.body = {
       message: 'Feed product already in progess',

@@ -4,7 +4,7 @@ interface ClerkFeed {
   orders?: ClerkOrder[]
   customers?: ClerkCustomer[]
   pages?: ClerkPage[]
-  config: {
+  config?: {
     /**
      * Optional. A timestamp indicating when the feed was last updated. This is used for product versioning if real time product updates are pushed via the API.
      *
@@ -63,6 +63,7 @@ interface ClerkOrder {
    */
   time: number
   email: string
+  salesChannel?: string
 }
 
 interface ClerkCustomer {
