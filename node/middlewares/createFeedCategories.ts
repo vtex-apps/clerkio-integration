@@ -1,4 +1,5 @@
 import { generateCategoriesFeed } from '../services/generateCategoriesFeed'
+import { feedInProgress } from '../utils'
 
 export async function createFeedCategories(
   ctx: Context,
@@ -10,7 +11,7 @@ export async function createFeedCategories(
 
   const feedStatus = await feedManager.getFeedStatus('category')
 
-  if (feedStatus && !feedStatus.finishedAt) {
+  if (feedStatus && feedInProgress(feedStatus)) {
     ctx.status = 200
     ctx.body = {
       message: 'Feed category already in progress',
