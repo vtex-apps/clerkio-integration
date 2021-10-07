@@ -21,8 +21,11 @@ export async function getFeed(ctx: Context) {
 
     const [productsRes, categoriesRes] = await Promise.all(promises)
 
-    if (productsRes && categoriesRes) {
+    if (productsRes) {
       products = [...productsRes.data]
+    }
+
+    if (categoriesRes) {
       categories = [...categoriesRes.data]
     }
 
