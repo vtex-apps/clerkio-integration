@@ -7,6 +7,7 @@ interface BindingAppConfig {
   bindingId: string
   clerkioToken: string
   salesChannel: string
+  defaultLocale: string
 }
 
 interface ListOrderParams {

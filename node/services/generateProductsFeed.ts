@@ -1,12 +1,9 @@
 import {
-  bindingsQuery,
   extractAllProductIds,
-  formatBindings,
   iterationLimits,
   transformProductToClerk,
   pacer,
   SEARCH_GRAPHQL_APP,
-  TENANT_GRAPHQL_APP,
 } from '../utils'
 
 const createProductsQuery = (
@@ -45,6 +42,9 @@ export async function generateProductsFeed(ctx: Context) {
   const {
     clients: { catalog, feedManager, graphQLServer },
     vtex: { logger },
+    state: {
+      appConfig: { settings: storeBindings },
+    },
   } = ctx
 
   let feedStatus
@@ -60,31 +60,6 @@ export async function generateProductsFeed(ctx: Context) {
   }
 
   if (!feedStatus) {
-    return
-  }
-
-  let storeBindings
-
-  try {
-    const { data: tenantQuery } = await graphQLServer.query<TenantQuery>(
-      bindingsQuery,
-      TENANT_GRAPHQL_APP
-    )
-
-    const {
-      tenantInfo: { bindings },
-    } = tenantQuery
-
-    storeBindings = formatBindings(bindings)
-  } catch (error) {
-    logger.error({
-      message: 'Error getting store locales',
-      date: new Date().toString(),
-      error,
-    })
-  }
-
-  if (!storeBindings) {
     return
   }
 
@@ -146,13 +121,13 @@ export async function generateProductsFeed(ctx: Context) {
 
   for await (const binding of storeBindings) {
     const productQueriesPromises: Array<Promise<ProductsByIdentifierQuery>> = []
-    const { id: bindingId, locale, salesChannel } = binding
+    const { bindingId, defaultLocale, salesChannel } = binding
 
     for await (const idsArray of productIdsArrays) {
       const query = createProductsQuery(idsArray, salesChannel)
 
       productQueriesPromises.push(
-        graphQLServer.query(query, SEARCH_GRAPHQL_APP, locale)
+        graphQLServer.query(query, SEARCH_GRAPHQL_APP, defaultLocale)
       )
 
       await pacer(1000)
