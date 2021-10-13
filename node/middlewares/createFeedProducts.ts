@@ -1,3 +1,5 @@
+import { parse } from 'querystring'
+
 import { generateProductsFeed } from '../services/generateProductsFeed'
 import { feedInProgress } from '../utils'
 
@@ -7,11 +9,14 @@ export async function createFeedProducts(
 ) {
   const {
     clients: { feedManager },
+    querystring,
   } = ctx
+
+  const { force } = parse(querystring)
 
   const feedStatus = await feedManager.getFeedStatus('product')
 
-  if (feedStatus && feedInProgress(feedStatus)) {
+  if (!force && feedStatus && feedInProgress(feedStatus)) {
     ctx.status = 200
     ctx.body = {
       message: 'Feed product already in progess',

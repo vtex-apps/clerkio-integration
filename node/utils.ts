@@ -35,6 +35,12 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
         'Missing Sales Channel for one or more configuration'
       )
     }
+
+    if (!setting.defaultLocale) {
+      throw new UserInputError(
+        'Missing Default Locale for one or more configuration'
+      )
+    }
   }
 }
 
@@ -111,39 +117,17 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   }
 }
 
-const VTEX_STORE_FRONT = 'vtex-storefront'
-
-export function formatBindings(bindings: Binding[]) {
-  return bindings.reduce<BindingInfo[]>((result, binding) => {
-    const { id, targetProduct, defaultLocale, extraContext } = binding
-
-    if (
-      targetProduct === VTEX_STORE_FRONT &&
-      extraContext.portal?.salesChannel
-    ) {
-      result.push({
-        id,
-        locale: defaultLocale,
-        salesChannel: extraContext.portal.salesChannel,
-      })
-
-      return result
-    }
-
-    return result
-  }, [])
-}
-
 export function getBindingSalesChannel(
-  bindings: Binding[],
+  bindings: BindingAppConfig[],
   bindingId: string
 ): any {
-  const [currentBinding] = bindings.filter(binding => binding.id === bindingId)
-  const {
-    extraContext: { portal },
-  } = currentBinding
+  const [currentBinding] = bindings.filter(
+    binding => binding.bindingId === bindingId
+  )
 
-  return String(portal?.salesChannel)
+  const { salesChannel } = currentBinding
+
+  return salesChannel
 }
 
 export function transformProductToClerk(product: ProductInfo): ClerkProduct {
@@ -227,16 +211,4 @@ export function feedInProgress(feedStatus: FeedStatus): boolean {
   return false
 }
 
-export const bindingsQuery = `query {
-  tenantInfo {
-    bindings {
-      id
-      defaultLocale
-      targetProduct
-      extraContext
-    }
-  }
-}`
-
 export const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
-export const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'

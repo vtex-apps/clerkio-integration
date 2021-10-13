@@ -1,32 +1,22 @@
-import {
-  getBindingSalesChannel,
-  bindingsQuery,
-  TENANT_GRAPHQL_APP,
-} from '../utils'
+import { getBindingSalesChannel } from '../utils'
 
 export async function getBindingIntegrationInfo(
   ctx: Context,
   next: () => Promise<void>
 ) {
   const {
-    clients: { feedManager, graphQLServer },
+    clients: { feedManager },
     vtex: {
       route: { params },
+    },
+    state: {
+      appConfig: { settings: storeBindings },
     },
   } = ctx
 
   try {
-    const { data: tenantQuery } = await graphQLServer.query<TenantQuery>(
-      bindingsQuery,
-      TENANT_GRAPHQL_APP
-    )
-
-    const {
-      tenantInfo: { bindings },
-    } = tenantQuery
-
     const bindingId = params.bindingId as string
-    const salesChannel = getBindingSalesChannel(bindings, bindingId)
+    const salesChannel = getBindingSalesChannel(storeBindings, bindingId)
     const lastIntegration = await feedManager.getLastIntegration(bindingId)
 
     ctx.state.bindingIntegrationInfo = {

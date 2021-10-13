@@ -34,6 +34,10 @@ const clients: ClientsConfig<Clients> = {
       retries: 4,
       timeout: LONG_TIMEOUT_MS,
     },
+    catalog: {
+      retries: 4,
+      timeout: LONG_TIMEOUT_MS,
+    },
   },
 }
 

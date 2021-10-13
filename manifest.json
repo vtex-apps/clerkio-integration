@@ -1,7 +1,7 @@
 {
   "name": "clerkio-integration",
   "vendor": "vtex",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "title": "Clerk.io Integration",
   "description": "Integrate Cler.io powerful personalization to your store. ",
   "billingOptions": {
@@ -11,9 +11,7 @@
     },
     "free": true,
     "type": "free",
-    "availableCountries": [
-      "*"
-    ]
+    "availableCountries": ["*"]
   },
   "builders": {
     "messages": "1.x",
@@ -71,6 +69,11 @@
       "salesChannel": {
         "title": "Sales Channel",
         "description": "Sales Channel associated to the selected binding",
+        "type": "string"
+      },
+      "defaultLocale": {
+        "title": "Default Locale",
+        "description": "Language that will be used to generate product feed",
         "type": "string"
       }
     }
