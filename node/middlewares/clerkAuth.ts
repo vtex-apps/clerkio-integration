@@ -1,7 +1,8 @@
 import { parse } from 'querystring'
-import { createHash } from 'crypto'
 
-const key = 'wCDOCYsZ5RHlLLZjOUUUnrtTa1cTmf8CezvcZgrn3h'
+import { AuthenticationError, UserInputError } from '@vtex/api'
+
+import { compareHash } from '../utils/hash'
 
 export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
   const {
@@ -9,32 +10,33 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
       route: { params },
     },
     querystring,
+    state: {
+      appConfig: { settings },
+    },
   } = ctx
 
-  const unixTimestamp = Date.now()
-
-  // eslint-disable-next-line no-console
-  console.log({ unixTimestamp })
-
+  const timestamp = Date.now() / 1000
   const { bindingId } = params
+  const { salt, hash } = parse(querystring) as { salt: string; hash: string }
 
-  if (bindingId) {
-    const { salt, hash } = parse(querystring)
+  if (!salt || !hash) {
+    throw new UserInputError(`Missing salt ${salt} or hash ${hash} params`)
+  }
 
-    // eslint-disable-next-line no-console
-    console.log({ salt, hash })
+  const appSettings = settings.find(setting => setting.bindingId === bindingId)
 
-    const hash512 = createHash('sha512')
-    const hashed = hash512
-      .update(`${salt}${key}${Math.floor(unixTimestamp / 100)}`)
-      .digest('hex')
+  if (!appSettings) {
+    throw new UserInputError(
+      `Binding sent on url params ${bindingId} does not match any in the app settings. Please review it.`
+    )
+  }
 
-    // eslint-disable-next-line no-console
-    console.log({ hashed })
+  const { clerkioToken } = appSettings
 
-    ctx.status = 200
+  const isAuth = compareHash(hash, { salt, timestamp, key: clerkioToken })
 
-    return
+  if (!isAuth) {
+    throw new AuthenticationError('Unauthorized')
   }
 
   await next()

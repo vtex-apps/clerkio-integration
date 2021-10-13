@@ -68,9 +68,9 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     feed: method({
       GET: [
-        clerkAuth,
         errorHandler,
         parseAppSetings,
+        clerkAuth,
         getBindingIntegrationInfo,
         getFeed,
       ],
