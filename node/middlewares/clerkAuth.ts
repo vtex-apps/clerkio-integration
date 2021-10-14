@@ -21,7 +21,7 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
   const { salt, hash } = parse(querystring) as { salt: string; hash: string }
 
   if (!salt || !hash) {
-    throw new UserInputError(`Missing salt ${salt} or hash ${hash} params`)
+    throw new UserInputError(`Missing salt or hash params`)
   }
 
   const appSettings = settings.find(setting => setting.bindingId === bindingId)
