@@ -20,6 +20,8 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
   const { bindingId } = params
   const { salt, hash } = parse(querystring) as { salt: string; hash: string }
 
+  ctx.set('Cache-Control', 'no-cache, no-store')
+
   if (!salt || !hash) {
     throw new UserInputError(`Missing salt or hash params`)
   }
