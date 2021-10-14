@@ -18,6 +18,8 @@ import {
   parseAppSetings,
   feedStatus,
   clerkAuth,
+  resetIntegrationInfo,
+  integrationStatus,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -77,6 +79,10 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],
+    }),
+    integrationStatus: method({
+      GET: [errorHandler, integrationStatus],
+      DELETE: [errorHandler, resetIntegrationInfo],
     }),
   },
 })

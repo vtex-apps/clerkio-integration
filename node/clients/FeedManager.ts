@@ -80,13 +80,8 @@ export class FeedManager extends VBase {
       true
     )
 
-  public ordersIntegratedAt = async (
-    bindingId: string
-  ): Promise<number | undefined> => {
-    const lastIntegration = await this.getLastIntegration(bindingId)
-
-    return lastIntegration?.orderIntegratedAt
-  }
+  public resetLastIntegrationInfo = (bindingId: string) =>
+    this.saveJSON(BUCKET, this.lastIntegrationPath(bindingId), null)
 
   public createFeedStatus = async (type: FeedType) => {
     const feedStatusStructure = this.feedStatusStructure({ type })
