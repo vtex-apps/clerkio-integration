@@ -89,12 +89,12 @@ type OrderIntegrationControl = Record<string, number>
 
 interface IntegrationInfo {
   /**
-   * The time when orders were integrated as a Unix Timestamp
+   * The Date when orders were integrated
    *
-   * @type {number}
+   * @type {Date}
    * @memberOf IntegrationInfo
    */
-  orderIntegratedAt: number
+  orderIntegratedAt: Date
   /**
    * Number of products integrated
    *
@@ -109,17 +109,17 @@ interface IntegrationInfo {
    * @memberOf IntegrationInfo
    */
   categories: number
-  integratedAt: number
+  integratedAt: Date
 }
 
 interface IntegrationInfoInput {
   /**
-   * The time when orders were integrated as a Unix Timestamp
+   * The Date when orders were integrated
    *
-   * @type {number}
+   * @type {Date}
    * @memberOf IntegrationInfo
    */
-  orderIntegratedAt: number
+  orderIntegratedAt: Date
   /**
    * Number of products integrated
    *

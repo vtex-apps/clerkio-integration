@@ -26,15 +26,17 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
     throw new UserInputError(`Missing salt or hash params`)
   }
 
-  const appSettings = settings.find(setting => setting.bindingId === bindingId)
+  const bindingSettings = settings.find(
+    setting => setting.bindingId === bindingId
+  )
 
-  if (!appSettings) {
+  if (!bindingSettings) {
     throw new UserInputError(
       `Binding sent on url params ${bindingId} does not match any in the app settings. Please review Clerk URL or app settings.`
     )
   }
 
-  const { clerkioPrivateToken } = appSettings
+  const { clerkioPrivateToken } = bindingSettings
 
   const isAuth = compareHash(hash, {
     salt,
