@@ -14,9 +14,10 @@ import {
   createFeedProducts,
   createFeedOrders,
   sendResponse,
-  feedStatus,
   getBindingIntegrationInfo,
   parseAppSetings,
+  feedStatus,
+  clerkAuth,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -66,7 +67,13 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, parseAppSetings, createFeedOrders, sendResponse],
     }),
     feed: method({
-      GET: [errorHandler, parseAppSetings, getBindingIntegrationInfo, getFeed],
+      GET: [
+        errorHandler,
+        parseAppSetings,
+        clerkAuth,
+        getBindingIntegrationInfo,
+        getFeed,
+      ],
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],

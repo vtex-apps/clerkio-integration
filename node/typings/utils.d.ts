@@ -6,6 +6,7 @@ interface AppConfig {
 interface BindingAppConfig {
   bindingId: string
   clerkioToken: string
+  clerkioPrivateToken: string
   salesChannel: string
   defaultLocale: string
 }
