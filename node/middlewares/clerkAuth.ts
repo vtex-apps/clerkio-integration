@@ -34,9 +34,13 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
     )
   }
 
-  const { clerkioToken } = appSettings
+  const { clerkioPrivateToken } = appSettings
 
-  const isAuth = compareHash(hash, { salt, timestamp, key: clerkioToken })
+  const isAuth = compareHash(hash, {
+    salt,
+    timestamp,
+    key: clerkioPrivateToken,
+  })
 
   if (!isAuth) {
     throw new AuthenticationError('Unauthorized')

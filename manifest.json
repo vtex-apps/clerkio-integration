@@ -66,6 +66,11 @@
         "description": "This is the public key to be used for authentication with the Clerk.io API",
         "type": "string"
       },
+      "clerkioPrivateToken": {
+        "title": "Clerk.io Private API Key",
+        "description": "This is the private key to validate Clerk requests to get the feed",
+        "type": "string"
+      },
       "salesChannel": {
         "title": "Sales Channel",
         "description": "Sales Channel associated to the selected binding",
