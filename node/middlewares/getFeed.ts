@@ -48,6 +48,7 @@ export async function getFeed(ctx: Context) {
       orderIntegratedAt: orderIntegratedAt ?? new Date(),
       products: products.length,
       categories: categories.length,
+      orders: orders.length,
     }
 
     feedManager.updateLastIntegration(lastIntegrationUpdated)

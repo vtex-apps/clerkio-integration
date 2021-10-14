@@ -109,6 +109,13 @@ interface IntegrationInfo {
    * @memberOf IntegrationInfo
    */
   categories: number
+  /**
+   * Number of orders integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orders: number
   integratedAt: Date
 }
 
@@ -134,5 +141,12 @@ interface IntegrationInfoInput {
    * @memberOf IntegrationInfo
    */
   categories: number
+  /**
+   * Number of orders integrated
+   *
+   * @type {number}
+   * @memberOf IntegrationInfo
+   */
+  orders: number
   bindingId: string
 }

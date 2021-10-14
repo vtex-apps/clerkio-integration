@@ -61,6 +61,7 @@ export class FeedManager extends VBase {
     products,
     orderIntegratedAt,
     categories,
+    orders,
   }: IntegrationInfoInput) =>
     this.saveJSON<IntegrationInfo>(
       BUCKET,
@@ -70,6 +71,7 @@ export class FeedManager extends VBase {
         orderIntegratedAt,
         categories,
         integratedAt: new Date(),
+        orders,
       }
     )
 
