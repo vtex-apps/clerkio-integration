@@ -15,6 +15,7 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
     },
   } = ctx
 
+  // timestamp in seconds
   const timestamp = Date.now() / 1000
   const { bindingId } = params
   const { salt, hash } = parse(querystring) as { salt: string; hash: string }
@@ -27,7 +28,7 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
 
   if (!appSettings) {
     throw new UserInputError(
-      `Binding sent on url params ${bindingId} does not match any in the app settings. Please review it.`
+      `Binding sent on url params ${bindingId} does not match any in the app settings. Please review Clerk URL or app settings.`
     )
   }
 
