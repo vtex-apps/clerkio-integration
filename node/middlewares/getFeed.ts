@@ -9,6 +9,7 @@ export async function getFeed(ctx: Context) {
 
   try {
     const orderIntegratedAt = lastIntegration?.orderIntegratedAt
+    const orderIntegrated = lastIntegration?.orders
 
     let products: ClerkProduct[] = []
     let categories: ClerkCategory[] = []
@@ -48,7 +49,7 @@ export async function getFeed(ctx: Context) {
       orderIntegratedAt: orderIntegratedAt ?? new Date().toString(),
       products: products.length,
       categories: categories.length,
-      orders: orders.length,
+      orders: orderIntegrated ?? orders.length,
     }
 
     feedManager.updateLastIntegration(lastIntegrationUpdated)
