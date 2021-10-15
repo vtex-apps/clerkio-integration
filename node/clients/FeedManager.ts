@@ -70,7 +70,7 @@ export class FeedManager extends VBase {
         products,
         orderIntegratedAt,
         categories,
-        integratedAt: new Date(),
+        integratedAt: new Date().toString(),
         orders,
       }
     )

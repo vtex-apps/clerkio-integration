@@ -45,7 +45,7 @@ export async function getFeed(ctx: Context) {
 
     const lastIntegrationUpdated: IntegrationInfoInput = {
       bindingId,
-      orderIntegratedAt: orderIntegratedAt ?? new Date(),
+      orderIntegratedAt: orderIntegratedAt ?? new Date().toString(),
       products: products.length,
       categories: categories.length,
       orders: orders.length,
