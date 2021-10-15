@@ -27,7 +27,7 @@
       "public": true
     },
     "integrationStatus": {
-      "path": "/_v/clerkio-integration/clerk-feed/:bindingId",
+      "path": "/_v/clerkio-integration/clerk-feed/:bindingId/status",
       "public": false
     }
   }
