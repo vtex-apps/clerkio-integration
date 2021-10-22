@@ -27,6 +27,7 @@ interface ProductInfo {
   }
   items: Images[]
   link: string
+  linkText: string
   categoryTree: Category[]
   brand?: string
   releaseDate: number | null

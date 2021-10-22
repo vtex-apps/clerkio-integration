@@ -81,6 +81,11 @@
         "title": "Default Locale",
         "description": "Language that will be used to generate product feed",
         "type": "string"
+      },
+      "rootPath": {
+        "title": "Binding Root Path",
+        "description": "Root path that identifies the binding. Leave it empty if this binding doesn't have one. Don't include the leading and trailing slash",
+        "type": "string"
       }
     }
   },
