@@ -1,10 +1,10 @@
 {
   "admin/cms/clerkio.title": "Clerk IO",
-  "admin/cms/clerkio.description": "Store front block da prateleira de recomendação da integração co Clerk Io",
+  "admin/cms/clerkio.description": "Store front block da prateleira de recomendação da integração com Clerk Io",
   "admin/cms/clerkio.block.class.name": "Nome da class para o block",
-  "admin/cms/clerkio.block.class.description": "Nome da classe exclusiva - Evite usar a mesma classe para diferentes Blocks para a integração",
+  "admin/cms/clerkio.block.class.description": "Nome da classe exclusiva - Evite usar a mesma classe para diferentes Blocks para a integração. Não use Clerk como nome da classe",
   "admin/cms/clerkio.block.template.name": "Nome do template",
-  "admin/cms/clerkio.block.template.description": "Template name from Clerk Content, starting with @",
+  "admin/cms/clerkio.block.template.description": "Nome do template do Clerk Content, começando com @",
   "admin/cms/clerkio.block.logic.name": "Product Logic",
   "admin/cms/clerkio.block.logic.category.useContext": "Usar Contexto",
   "admin/cms/clerkio.block.logic.category.id": "Id da categoria",

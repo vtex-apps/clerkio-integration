@@ -1,13 +1,13 @@
 {
   "admin/cms/clerkio.title": "Clerk IO",
-  "admin/cms/clerkio.description": "Block that brings Clerk shelf",
+  "admin/cms/clerkio.description": "Bloque que trae el estante de recomendaciones de Clerk",
   "admin/cms/clerkio.block.class.name": "Block Class Name",
-  "admin/cms/clerkio.block.class.description": "Unique class Name - Please avoid using the same class to different Clerk Blocks",
-  "admin/cms/clerkio.block.template.name": "Template name",
-  "admin/cms/clerkio.block.template.description": "Template name from Clerk Content, starting with @",
+  "admin/cms/clerkio.block.class.description": "Nombre de clase para el bloque",
+  "admin/cms/clerkio.block.template.name": "Nombre de template",
+  "admin/cms/clerkio.block.template.description": "Nombre de template de Clerk Content, comenzando con @",
   "admin/cms/clerkio.block.logic.name": "Product Logic",
-  "admin/cms/clerkio.block.logic.category.useContext": "Use Context",
-  "admin/cms/clerkio.block.logic.category.id": "Category Id",
+  "admin/cms/clerkio.block.logic.category.useContext": "Usar Contexto",
+  "admin/cms/clerkio.block.logic.category.id": "Id de categoría",
   "admin/cms/clerkio.block.logic.keywords": "Keywords",
   "admin/cms/clerkio.block.logic.keyword": "Keyword"
 }
