@@ -9,6 +9,7 @@ interface BindingAppConfig {
   clerkioPrivateToken: string
   salesChannel: string
   defaultLocale: string
+  rootPath?: string
 }
 
 interface ListOrderParams {

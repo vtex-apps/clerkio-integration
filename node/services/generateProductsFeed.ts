@@ -30,6 +30,7 @@ const createProductsQuery = (
         }
       }
       link
+      linkText
       categoryTree {
         id
       }
@@ -121,7 +122,7 @@ export async function generateProductsFeed(ctx: Context) {
 
   for await (const binding of storeBindings) {
     const productQueriesPromises: Array<Promise<ProductsByIdentifierQuery>> = []
-    const { bindingId, defaultLocale, salesChannel } = binding
+    const { bindingId, defaultLocale, salesChannel, rootPath } = binding
 
     for await (const idsArray of productIdsArrays) {
       const query = createProductsQuery(idsArray, salesChannel)
@@ -150,7 +151,9 @@ export async function generateProductsFeed(ctx: Context) {
         await pacer(1000)
       }
 
-      const productFeed = products.map(transformProductToClerk)
+      const productFeed = products.map(product =>
+        transformProductToClerk(product, rootPath)
+      )
 
       await feedManager.saveProductFeed({ productFeed, bindingId })
 
@@ -160,7 +163,7 @@ export async function generateProductsFeed(ctx: Context) {
       })
 
       logger.info({
-        message: `Products feed generated for bonding with id ${bindingId}`,
+        message: `Products feed generated for binding with id ${bindingId}`,
         date: feedStatusUpdated.finishedAt,
       })
     } catch (error) {

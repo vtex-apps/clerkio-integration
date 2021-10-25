@@ -2,7 +2,7 @@
   "admin/cms/clerkio.title": "Clerk IO",
   "admin/cms/clerkio.description": "Block that brings Clerk shelf",
   "admin/cms/clerkio.block.class.name": "Block Class Name",
-  "admin/cms/clerkio.block.class.description": "Unique class Name - Please avoid using the same class to different Clerk Blocks",
+  "admin/cms/clerkio.block.class.description": "Unique class Name - Please avoid using the same class to different Clerk Blocks. Don't use Clerk as class name",
   "admin/cms/clerkio.block.template.name": "Template name",
   "admin/cms/clerkio.block.template.description": "Template name from Clerk Content, starting with @",
   "admin/cms/clerkio.block.logic.name": "Product Logic",

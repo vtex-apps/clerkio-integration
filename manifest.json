@@ -1,7 +1,7 @@
 {
   "name": "clerkio-integration",
   "vendor": "vtex",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "title": "Clerk.io Integration",
   "description": "Integrate Cler.io powerful personalization to your store. ",
   "billingOptions": {
@@ -26,7 +26,8 @@
     "vtex.catalog-graphql": "1.x",
     "vtex.graphql-server": "1.x",
     "vtex.render-runtime": "8.x",
-    "vtex.store-resources": "0.x"
+    "vtex.store-resources": "0.x",
+    "vtex.css-handles": "0.x"
   },
   "policies": [
     {
@@ -79,6 +80,11 @@
       "defaultLocale": {
         "title": "Default Locale",
         "description": "Language that will be used to generate product feed",
+        "type": "string"
+      },
+      "rootPath": {
+        "title": "Binding Root Path",
+        "description": "Root path that identifies the binding. Leave it empty if this binding doesn't have one. Don't include the leading and trailing slash",
         "type": "string"
       }
     }

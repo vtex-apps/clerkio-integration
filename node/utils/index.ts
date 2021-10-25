@@ -130,9 +130,16 @@ export function getBindingSalesChannel(
   return salesChannel
 }
 
-export function transformProductToClerk(product: ProductInfo): ClerkProduct {
+export function transformProductToClerk(
+  product: ProductInfo,
+  rootPath?: string
+): ClerkProduct {
   const dateString = product.releaseDate ?? new Date()
   const date = new Date(dateString).getTime()
+
+  const productUrl = rootPath
+    ? `/${rootPath}/${product.linkText}/p`
+    : `/${product.linkText}/p`
 
   return {
     id: product.productId,
@@ -145,7 +152,7 @@ export function transformProductToClerk(product: ProductInfo): ClerkProduct {
       product.priceRange.listPrice.highPrice ??
       product.priceRange.listPrice.lowPrice,
     image: product.items[0].images[0].imageUrl,
-    url: product.link,
+    url: productUrl,
     categories: product.categoryTree.map(category => category.id),
     brand: product.brand,
     created_at: date,
