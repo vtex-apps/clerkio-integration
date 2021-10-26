@@ -135,7 +135,9 @@ export function transformProductToClerk(
   rootPath?: string
 ): ClerkProduct {
   const dateString = product.releaseDate ?? new Date()
-  const date = new Date(dateString).getTime()
+  // Clerk asks the dates to be a UNIX timestamp (in seconds)
+  // .getTime generates it in miliseconds
+  const date = new Date(dateString).getTime() / 1000
 
   const productUrl = rootPath
     ? `/${rootPath}/${product.linkText}/p`
