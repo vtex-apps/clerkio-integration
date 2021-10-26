@@ -104,7 +104,9 @@ function normalizeEmailSoftEncrypt(email: string): string {
 export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   return {
     id: orderDetails.orderId,
-    time: new Date(orderDetails.creationDate).getTime(),
+    // Clerk asks the dates to be a UNIX timestamp (in seconds)
+    // .getTime generates it in miliseconds
+    time: Math.floor(new Date(orderDetails.creationDate).getTime() / 1000),
     email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
     salesChannel: orderDetails.salesChannel,
     products: orderDetails.items.map(item => {
@@ -137,7 +139,7 @@ export function transformProductToClerk(
   const dateString = product.releaseDate ?? new Date()
   // Clerk asks the dates to be a UNIX timestamp (in seconds)
   // .getTime generates it in miliseconds
-  const date = new Date(dateString).getTime() / 1000
+  const date = Math.floor(new Date(dateString).getTime() / 1000)
 
   const productUrl = rootPath
     ? `/${rootPath}/${product.linkText}/p`
