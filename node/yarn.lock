@@ -148,10 +148,10 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
-"@vtex/api@6.43.1":
-  version "6.43.1"
-  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.43.1.tgz#3c69cc23af97d23729f970b332d740041dcc8d2e"
-  integrity sha512-4I7rb+PrXGwmy/ZlYC+wQlWT9nePMdMb3dNJ9wPGMYkAa8J12uA4SeHQP9Uzf+gEYLatliTKzL1cvEYrAR41gg==
+"@vtex/api@6.45.3":
+  version "6.45.3"
+  resolved "https://registry.yarnpkg.com/@vtex/api/-/api-6.45.3.tgz#fe7d08adb4eab1fda5e34143cc6302a4c5aa5f52"
+  integrity sha512-kiD7We1TCKDyBdpYoh2Se3An+jTJRUzXGNpKifoDZylWQ1PyIx+3oL5ZAif9InlY3uJkfEisSAI6nxoKTgvPfw==
   dependencies:
     "@types/koa" "^2.11.0"
     "@types/koa-compose" "^3.2.3"
