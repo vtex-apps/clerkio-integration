@@ -1,0 +1,3 @@
+mutation generateOrderFeed($orderIdList: Upload!) {
+  generateOrderFeed(orderIdList: $orderIdList) @context(provider: "vtex.clerkio-integration")
+}

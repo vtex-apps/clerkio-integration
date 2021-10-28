@@ -1,8 +1,10 @@
 import type { FormEvent } from 'react'
 import React, { useState } from 'react'
+import { useMutation } from 'react-apollo'
 import { Dropzone, ButtonPlain } from 'vtex.styleguide'
 
-import { parseXLSToJSON } from './utils/fileParser'
+import GENERATE_ORDER_FEED from './graphql/generateOrderFeed.gql'
+import { createBlob, parseXLSToJSON } from './utils/fileParser'
 
 const IDLE = 'IDLE'
 const ERROR = 'ERROR'
@@ -18,6 +20,14 @@ type FileParseStatus =
 const ClerkIoAdmin = () => {
   const [parseFileStatus, setParseFileStatus] = useState<FileParseStatus>(IDLE)
   const [file, setFile] = useState<unknown[]>([])
+  const [generateOrderFeed] = useMutation<
+    {
+      generateOrderFeed: string
+    },
+    {
+      orderIdList: Blob
+    }
+  >(GENERATE_ORDER_FEED)
 
   const handleFile = async (files: FileList) => {
     if (parseFileStatus === LOADING) {
@@ -41,7 +51,7 @@ const ClerkIoAdmin = () => {
     setParseFileStatus(IDLE)
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (parseFileStatus !== LOADED) {
       // eslint-disable-next-line no-console
@@ -52,6 +62,16 @@ const ClerkIoAdmin = () => {
 
     // eslint-disable-next-line no-console
     console.log(file)
+    const fileToBlob = createBlob(file)
+
+    const { data } = await generateOrderFeed({
+      variables: {
+        orderIdList: fileToBlob,
+      },
+    })
+
+    // eslint-disable-next-line no-console
+    console.log({ data })
   }
 
   return (

@@ -22,3 +22,6 @@ export function parseXLSToJSON(file: Blob): Promise<unknown[]> {
 
   return promise
 }
+
+export const createBlob = (orderIdList: unknown[]) =>
+  new Blob([JSON.stringify(orderIdList, null, 2)], { type: 'application/json' })

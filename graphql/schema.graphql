@@ -1,5 +1,5 @@
 type Mutation {
-  generateOrderFeed(orderIdList: Upload): String
+  generateOrderFeed(orderIdList: Upload!): String
 }
 
 type Query {
