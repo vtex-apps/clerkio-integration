@@ -18,6 +18,7 @@ import {
   getBindingIntegrationInfo,
   parseAppSetings,
 } from './middlewares'
+import { mutations, queries } from './resolvers'
 
 const TIMEOUT_MS = 800
 const LONG_TIMEOUT_MS = 1200
@@ -51,6 +52,16 @@ declare global {
 
 export default new Service<Clients, State, ParamsContext>({
   clients,
+  graphql: {
+    resolvers: {
+      Mutation: {
+        ...mutations,
+      },
+      Query: {
+        ...queries,
+      },
+    },
+  },
   routes: {
     createFeedCategories: method({
       POST: [errorHandler, parseAppSetings, createFeedCategories, sendResponse],

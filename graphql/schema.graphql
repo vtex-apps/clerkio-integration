@@ -1,0 +1,7 @@
+type Mutation {
+  generateOrderFeed(orderIdList: Upload): String
+}
+
+type Query {
+  doNotCall: Boolean
+}

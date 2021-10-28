@@ -20,7 +20,8 @@
     "pixel": "0.x",
     "docs": "0.x",
     "node": "6.x",
-    "admin": "0.x"
+    "admin": "0.x",
+    "graphql": "1.x"
   },
   "dependencies": {
     "vtex.pixel-interfaces": "1.x",
