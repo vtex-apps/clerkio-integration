@@ -1,5 +1,7 @@
 import type { ReadStream } from 'fs'
 
+import { parseStreamToJSON } from '../utils/parseFile'
+
 type UploadFile<T> = Promise<{
   filename: string
   mimetype: string
@@ -13,6 +15,13 @@ const generateOrderFeed = async (
 ) => {
   // eslint-disable-next-line no-console
   console.log(args.orderIdList)
+
+  const { createReadStream } = await args.orderIdList
+
+  const orderListIdParsed = await parseStreamToJSON(createReadStream())
+
+  // eslint-disable-next-line no-console
+  console.log({ orderListIdParsed })
 
   return ''
 }
