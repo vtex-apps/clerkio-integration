@@ -12,7 +12,7 @@ export default class GraphQLServer extends AppClient {
   public query = async <T>(
     query: string,
     provider: string,
-    locale?: string
+    bindingArgs: { locale: string; bindingId: string }
   ): Promise<T> => {
     try {
       return (await this.graphql.query(
@@ -28,7 +28,8 @@ export default class GraphQLServer extends AppClient {
         },
         {
           params: {
-            locale,
+            locale: bindingArgs.locale,
+            __bindingId: bindingArgs.bindingId,
           },
           url: '/graphql',
         }
