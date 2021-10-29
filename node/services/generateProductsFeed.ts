@@ -128,7 +128,10 @@ export async function generateProductsFeed(ctx: Context) {
       const query = createProductsQuery(idsArray, salesChannel)
 
       productQueriesPromises.push(
-        graphQLServer.query(query, SEARCH_GRAPHQL_APP, defaultLocale)
+        graphQLServer.query(query, SEARCH_GRAPHQL_APP, {
+          locale: defaultLocale,
+          bindingId,
+        })
       )
 
       await pacer(1000)
