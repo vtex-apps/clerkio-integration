@@ -18,6 +18,9 @@ import {
   parseAppSetings,
   feedStatus,
   clerkAuth,
+  resetIntegrationInfo,
+  integrationStatus,
+  vtexAuth,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -51,6 +54,7 @@ declare global {
       lastIntegration: IntegrationInfo | null
     }
     appConfig: AppConfig
+    isVtex?: boolean
   }
 }
 
@@ -77,6 +81,19 @@ export default new Service<Clients, State, ParamsContext>({
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],
+    }),
+    integrationStatus: method({
+      GET: [errorHandler, integrationStatus],
+      DELETE: [errorHandler, resetIntegrationInfo],
+    }),
+    authFeed: method({
+      GET: [
+        errorHandler,
+        parseAppSetings,
+        vtexAuth,
+        getBindingIntegrationInfo,
+        getFeed,
+      ],
     }),
   },
 })
