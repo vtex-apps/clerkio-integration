@@ -35,6 +35,12 @@ export function validateAppSettings(appConfig: AppConfig): boolean | void {
         'Missing Sales Channel for one or more configuration'
       )
     }
+
+    if (!setting.defaultLocale) {
+      throw new UserInputError(
+        'Missing Default Locale for one or more configuration'
+      )
+    }
   }
 }
 
@@ -98,7 +104,9 @@ function normalizeEmailSoftEncrypt(email: string): string {
 export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   return {
     id: orderDetails.orderId,
-    time: new Date(orderDetails.creationDate).getTime(),
+    // Clerk asks the dates to be a UNIX timestamp (in seconds)
+    // .getTime generates it in miliseconds
+    time: Math.floor(new Date(orderDetails.creationDate).getTime() / 1000),
     email: normalizeEmailSoftEncrypt(orderDetails.clientProfileData.email),
     salesChannel: orderDetails.salesChannel,
     products: orderDetails.items.map(item => {
@@ -111,44 +119,31 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
   }
 }
 
-const VTEX_STORE_FRONT = 'vtex-storefront'
-
-export function formatBindings(bindings: Binding[]) {
-  return bindings.reduce<BindingInfo[]>((result, binding) => {
-    const { id, targetProduct, defaultLocale, extraContext } = binding
-
-    if (
-      targetProduct === VTEX_STORE_FRONT &&
-      extraContext.portal?.salesChannel
-    ) {
-      result.push({
-        id,
-        locale: defaultLocale,
-        salesChannel: extraContext.portal.salesChannel,
-      })
-
-      return result
-    }
-
-    return result
-  }, [])
-}
-
 export function getBindingSalesChannel(
-  bindings: Binding[],
+  bindings: BindingAppConfig[],
   bindingId: string
 ): any {
-  const [currentBinding] = bindings.filter(binding => binding.id === bindingId)
-  const {
-    extraContext: { portal },
-  } = currentBinding
+  const [currentBinding] = bindings.filter(
+    binding => binding.bindingId === bindingId
+  )
 
-  return String(portal?.salesChannel)
+  const { salesChannel } = currentBinding
+
+  return salesChannel
 }
 
-export function transformProductToClerk(product: ProductInfo): ClerkProduct {
+export function transformProductToClerk(
+  product: ProductInfo,
+  rootPath?: string
+): ClerkProduct {
   const dateString = product.releaseDate ?? new Date()
-  const date = new Date(dateString).getTime()
+  // Clerk asks the dates to be a UNIX timestamp (in seconds)
+  // .getTime generates it in miliseconds
+  const date = Math.floor(new Date(dateString).getTime() / 1000)
+
+  const productUrl = rootPath
+    ? `/${rootPath}/${product.linkText}/p`
+    : `/${product.linkText}/p`
 
   return {
     id: product.productId,
@@ -161,7 +156,7 @@ export function transformProductToClerk(product: ProductInfo): ClerkProduct {
       product.priceRange.listPrice.highPrice ??
       product.priceRange.listPrice.lowPrice,
     image: product.items[0].images[0].imageUrl,
-    url: product.link,
+    url: productUrl,
     categories: product.categoryTree.map(category => category.id),
     brand: product.brand,
     created_at: date,
@@ -227,16 +222,4 @@ export function feedInProgress(feedStatus: FeedStatus): boolean {
   return false
 }
 
-export const bindingsQuery = `query {
-  tenantInfo {
-    bindings {
-      id
-      defaultLocale
-      targetProduct
-      extraContext
-    }
-  }
-}`
-
 export const SEARCH_GRAPHQL_APP = 'vtex.search-graphql@0.x'
-export const TENANT_GRAPHQL_APP = 'vtex.tenant-graphql@0.x'

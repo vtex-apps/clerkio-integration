@@ -14,9 +14,13 @@ import {
   createFeedProducts,
   createFeedOrders,
   sendResponse,
-  feedStatus,
   getBindingIntegrationInfo,
   parseAppSetings,
+  feedStatus,
+  clerkAuth,
+  resetIntegrationInfo,
+  integrationStatus,
+  vtexAuth,
 } from './middlewares'
 
 const TIMEOUT_MS = 800
@@ -33,6 +37,10 @@ const clients: ClientsConfig<Clients> = {
       retries: 4,
       timeout: LONG_TIMEOUT_MS,
     },
+    catalog: {
+      retries: 4,
+      timeout: LONG_TIMEOUT_MS,
+    },
   },
 }
 
@@ -46,6 +54,7 @@ declare global {
       lastIntegration: IntegrationInfo | null
     }
     appConfig: AppConfig
+    isVtex?: boolean
   }
 }
 
@@ -62,10 +71,29 @@ export default new Service<Clients, State, ParamsContext>({
       POST: [errorHandler, parseAppSetings, createFeedOrders, sendResponse],
     }),
     feed: method({
-      GET: [errorHandler, parseAppSetings, getBindingIntegrationInfo, getFeed],
+      GET: [
+        errorHandler,
+        parseAppSetings,
+        clerkAuth,
+        getBindingIntegrationInfo,
+        getFeed,
+      ],
     }),
     feedStatus: method({
       GET: [errorHandler, feedStatus],
+    }),
+    integrationStatus: method({
+      GET: [errorHandler, integrationStatus],
+      DELETE: [errorHandler, resetIntegrationInfo],
+    }),
+    authFeed: method({
+      GET: [
+        errorHandler,
+        parseAppSetings,
+        vtexAuth,
+        getBindingIntegrationInfo,
+        getFeed,
+      ],
     }),
   },
 })

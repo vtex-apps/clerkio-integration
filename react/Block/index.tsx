@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useRuntime } from 'vtex.render-runtime'
 import { session } from 'vtex.store-resources/Queries'
 import { useQuery } from 'react-apollo'
+import { useCssHandles } from 'vtex.css-handles'
 
 import { DATA_CATEGORY, DATA_KEYWORDS, logicTypes } from './constants'
 import {
@@ -28,6 +29,8 @@ interface Session {
   }
 }
 
+const CSS_HANDLES = ['container'] as const
+
 const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   blockClassName,
   templateName,
@@ -47,6 +50,8 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   const { data, loading } = useQuery<Session>(session, {
     ssr: false,
   })
+
+  const handles = useCssHandles(CSS_HANDLES)
 
   useEffect(() => {
     const { Clerk } = window
@@ -69,7 +74,7 @@ const ClerkIoBlock: StorefrontFunctionComponent<BlockProps> = ({
   })
 
   return adjustedClassName && templateName ? (
-    <div>
+    <div className={handles.container}>
       <span
         className={adjustedClassName}
         data-template={templateName}
