@@ -16,7 +16,7 @@
     "vtex.store-resources": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.store-resources@0.85.0/public/@types/vtex.store-resources"
   },
   "dependencies": {
-    "@vtex/api": "6.45.4"
+    "@vtex/api": "6.45.3"
   },
   "scripts": {
     "lint": "tsc --noEmit --pretty && tslint -c tslint.json './**/*.ts'"
