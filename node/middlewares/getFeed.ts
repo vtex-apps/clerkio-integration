@@ -1,3 +1,8 @@
+import { parse } from 'querystring'
+
+import { generateCategoriesFeed } from '../services/generateCategoriesFeed'
+import { generateProductsFeed } from '../services/generateProductsFeed'
+
 export async function getFeed(ctx: Context) {
   const {
     clients: { feedManager },
@@ -6,7 +11,10 @@ export async function getFeed(ctx: Context) {
       isVtex,
     },
     vtex: { logger },
+    querystring,
   } = ctx
+
+  const { skipFeed } = parse(querystring)
 
   try {
     const orderIntegratedAt = lastIntegration?.orderIntegratedAt
@@ -68,6 +76,13 @@ export async function getFeed(ctx: Context) {
         data: lastIntegrationUpdated,
       })
     }
+
+    if (skipFeed) {
+      return
+    }
+
+    generateProductsFeed(ctx)
+    generateCategoriesFeed(ctx)
   } catch (error) {
     throw new Error(error)
   }
