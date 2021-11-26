@@ -1,6 +1,15 @@
 interface AppConfig {
   bindingBounded: boolean
   settings: BindingAppConfig[]
+  /**
+   * The AppConfig object has the following properties
+   * in the root level when the settings is not binding bounded
+   */
+  clerkioToken?: string
+  clerkioPrivateToken?: string
+  salesChannel?: string
+  defaultLocale?: string
+  rootPath?: string
 }
 
 interface BindingAppConfig {
