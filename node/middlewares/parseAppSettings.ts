@@ -1,4 +1,5 @@
 import { validateAppSettings } from '../utils'
+import { normalizeAppSettings } from '../utils/normalizeAppSettings'
 
 export async function parseAppSetings(ctx: Context, next: () => Promise<void>) {
   const {
@@ -9,9 +10,11 @@ export async function parseAppSetings(ctx: Context, next: () => Promise<void>) {
     process.env.VTEX_APP_ID as string
   )
 
-  validateAppSettings(appConfig)
+  const normalizedAppSettings = await normalizeAppSettings(appConfig, ctx)
 
-  ctx.state.appConfig = appConfig
+  validateAppSettings(normalizedAppSettings)
+
+  ctx.state.appConfig = normalizedAppSettings
 
   await next()
 }

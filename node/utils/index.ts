@@ -13,10 +13,6 @@ export function iterationLimits(step: number) {
 }
 
 export function validateAppSettings(appConfig: AppConfig): boolean | void {
-  if (!appConfig.bindingBounded) {
-    throw new UserInputError('App needs to be binding bounded')
-  }
-
   for (const setting of appConfig.settings) {
     if (!setting.bindingId) {
       throw new UserInputError(
