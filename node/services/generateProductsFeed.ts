@@ -154,9 +154,10 @@ export async function generateProductsFeed(ctx: Context) {
         await pacer(1000)
       }
 
-      const productFeed = products.map(product =>
-        transformProductToClerk(product, rootPath)
-      )
+      const productFeed = products
+        .map(product => transformProductToClerk(product, rootPath))
+        // Filter undefined products returned from the previous map funciton
+        .filter(product => product) as ClerkProduct[]
 
       await feedManager.saveProductFeed({ productFeed, bindingId })
 
