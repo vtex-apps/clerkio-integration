@@ -118,7 +118,7 @@ export function transformOrderToClerk(orderDetails: Order): ClerkOrder {
 export function getBindingSalesChannel(
   bindings: BindingAppConfig[],
   bindingId: string
-): any {
+): string {
   const [currentBinding] = bindings.filter(
     binding => binding.bindingId === bindingId
   )
@@ -131,7 +131,13 @@ export function getBindingSalesChannel(
 export function transformProductToClerk(
   product: ProductInfo,
   rootPath?: string
-): ClerkProduct {
+): ClerkProduct | undefined {
+  const { sellingPrice, listPrice } = product.priceRange
+
+  if (!sellingPrice.highPrice && !listPrice.highPrice) {
+    return
+  }
+
   const dateString = product.releaseDate ?? new Date()
   // Clerk asks the dates to be a UNIX timestamp (in seconds)
   // .getTime generates it in miliseconds
@@ -145,12 +151,8 @@ export function transformProductToClerk(
     id: product.productId,
     name: product.productName,
     description: product.description,
-    price:
-      product.priceRange.sellingPrice.highPrice ??
-      product.priceRange.sellingPrice.lowPrice,
-    list_price:
-      product.priceRange.listPrice.highPrice ??
-      product.priceRange.listPrice.lowPrice,
+    price: sellingPrice.highPrice,
+    list_price: listPrice.highPrice,
     image: product.items[0].images[0].imageUrl,
     url: productUrl,
     categories: product.categoryTree.map(category => category.id),
