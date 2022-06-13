@@ -1,9 +1,9 @@
 {
-  "name": "clerkio-integration",
+  "name": "feeds",
   "vendor": "vtex",
-  "version": "1.1.0",
-  "title": "Clerk.io Integration",
-  "description": "Integrate Cler.io powerful personalization to your store. ",
+  "version": "0.0.1",
+  "title": "Feeds",
+  "description": "Feeds",
   "billingOptions": {
     "termsURL": "https://compliance.vtex.com/gdpr/policies/vtex-privacy-policy",
     "support": {

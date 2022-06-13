@@ -1,5 +1,12 @@
 📢 Use this project, [contribute](https://github.com/vtex-apps/CHANGEME) to it or open issues to help evolve it using [Store Discussion](https://github.com/vtex-apps/store-discussion).
 
+# Setup
+It's always required to have multibinding on the app settings:
+https://feed--tmehdimarketplace.myvtex.com/admin/apps/vtex.feeds@0.0.1/setup/
+
+
+
+
 # APP NAME
 
 <!-- DOCS-IGNORE:start -->

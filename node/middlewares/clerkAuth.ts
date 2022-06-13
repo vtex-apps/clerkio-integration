@@ -1,30 +1,32 @@
-import { parse } from 'querystring'
+// import { parse } from 'querystring'
 
-import { AuthenticationError, UserInputError } from '@vtex/api'
+// import { AuthenticationError, UserInputError } from '@vtex/api'
+import { UserInputError } from '@vtex/api'
 
-import { compareHash } from '../utils/hash'
+
+// import { compareHash } from '../utils/hash'
 
 export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
   const {
     vtex: {
       route: { params },
     },
-    querystring,
+    // querystring,
     state: {
       appConfig: { settings },
     },
   } = ctx
 
   // timestamp in seconds
-  const timestamp = Date.now() / 1000
+  // const timestamp = Date.now() / 1000
   const { bindingId } = params
-  const { salt, hash } = parse(querystring) as { salt: string; hash: string }
+  // const { salt, hash } = parse(querystring) as { salt: string; hash: string }
 
   ctx.set('Cache-Control', 'no-cache, no-store')
 
-  if (!salt || !hash) {
-    throw new UserInputError(`Missing salt or hash params`)
-  }
+  // if (!salt || !hash) {
+  //   throw new UserInputError(`Missing salt or hash params`)
+  // }
 
   const bindingSettings = settings.find(
     setting => setting.bindingId === bindingId
@@ -36,17 +38,17 @@ export async function clerkAuth(ctx: Context, next: () => Promise<void>) {
     )
   }
 
-  const { clerkioPrivateToken } = bindingSettings
+  // const { clerkioPrivateToken } = bindingSettings
 
-  const isAuth = compareHash(hash, {
-    salt,
-    timestamp,
-    key: clerkioPrivateToken,
-  })
+  // const isAuth = compareHash(hash, {
+  //   salt,
+  //   timestamp,
+  //   key: clerkioPrivateToken,
+  // })
 
-  if (!isAuth) {
-    throw new AuthenticationError('Unauthorized')
-  }
+  // if (!isAuth) {
+  //   throw new AuthenticationError('Unauthorized')
+  // }
 
   await next()
 }
