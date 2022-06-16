@@ -59,7 +59,6 @@ Go to VTEX Site Editor, and on the right side menu a ClerkIO block will be displ
 `Recommendation Logic`: match the recommendation logic to the one specified on the previously created Content. 
 
 ## Configuration ClerkIO
-### Before proceeding please make sure you already have already completed the setup in VTEX. 
 1. create a new store on ClerkIO dashboard. For multi-binding sites, each binding should be a store on Clerk. 
 2. Go to Data -> Data Sync Settings -> Sync Method and Select `ClerkIO JSON Feed`. once prompted to insert the url, insert the following URL format:
 `https://{{accountName}}.myvtex.com/_v/clerkio-integration/clerk-feed/{{bindingId}}` 
@@ -68,7 +67,10 @@ and click on data sync. **This feed URL is exclusive for the use of ClerkIO.**
 If you want to validate your store's feed use this endpoint instead:
 `https://app.io.vtex.com/vtex.clerkio-integration/v1/{{accountName}}/{{workspace}}/_v/clerkio-integration/clerk-feed/{{bindingId}}`
 this endpoint requires VTEX authentication. 
+
+
 **Depending on the size of your store Catalogue the feed might take some time to generate**
+
 3. Go to Recommendations -> Design and create a new Shelf design to suit your store Style. 
 4. Go to Recommendations -> Content and create a new recommendation using the previously defined Design and the business rule you want to apply. 
 Repeat this step for every recommendation rule you want to include on your store. 
