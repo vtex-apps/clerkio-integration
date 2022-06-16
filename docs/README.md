@@ -50,7 +50,9 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
 ```
 
 5. **for this step onwards, please make sure you have already completed the configuration on ClerkIO steps 1 - 4.**
+
 Go to VTEX Site Editor, and on the right side menu a ClerkIO block will be displayed. Click on it.
+
 6. Fill in the information required on the block.
 `Block Class Name`: any name different from clerk.
 `Template Name`: insert the ID provided by Clerk on the previously created Content.
