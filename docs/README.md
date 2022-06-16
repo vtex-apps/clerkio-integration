@@ -26,15 +26,15 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
     Fill in the Fields as requested. For MultiBinding Sites, click on the enable configuration by binding to match a Clerk Store to each Binding. 
 3. On your store theme, Add `vtex.clerkio-integration` 1.x as a theme peerDependency in the `manifest.json` file
     
-    ```
+    ```json
     "peerDependencies": {
     "vtex.clerkio-integration": "1.x"
     }
-  ``
+    ```
 
 4. add the `clerkio`block anywhere on your store. Example: in `home.json`
 
-```
+```json
 {
   "store.home": {
     "blocks": [
