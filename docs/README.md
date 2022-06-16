@@ -33,7 +33,9 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
   ```
 
 4. add the `clerkio`block anywhere on your store. Example: in `home.json`
-```{
+
+```
+{
   "store.home": {
     "blocks": [
       "responsive-layout.desktop#homepage",
