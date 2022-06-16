@@ -30,7 +30,7 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
     "peerDependencies": {
     "vtex.clerkio-integration": "1.x"
     }
-  ```
+  ``
 
 4. add the `clerkio`block anywhere on your store. Example: in `home.json`
 
@@ -45,4 +45,4 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
   "responsive-layout.desktop#homepage": {
     "children": [
       "clerkio",
-```
+``
