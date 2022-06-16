@@ -45,4 +45,6 @@ This Apps Allow Stores to integrate with the **Recommendation Shelves** that **C
   "responsive-layout.desktop#homepage": {
     "children": [
       "clerkio",
+      ]}
+      }
 ``
